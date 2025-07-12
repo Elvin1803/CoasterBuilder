@@ -8,6 +8,9 @@
 #include <format>
 #include <fstream>
 
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 #include <iomanip>
 #include <iostream>
 

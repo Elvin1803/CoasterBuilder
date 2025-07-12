@@ -11,6 +11,10 @@ namespace UI {
             return;
         }
 
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
         m_window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
 
         if (!m_window) {
@@ -20,6 +24,12 @@ namespace UI {
         }
 
         glfwMakeContextCurrent(m_window);
+
+        // Create OpenGL context
+        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+        {
+            LOG_FATAL("Failed to initialize GLAD !");
+        }
     }
 
     Window::~Window() {
