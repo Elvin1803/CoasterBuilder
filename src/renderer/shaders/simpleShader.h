@@ -16,11 +16,19 @@ namespace renderer {
 
     class SimpleShader : public ShaderProgram {
     public:
-    SimpleShader()
-        : ShaderProgram(simpleVert, simpleFrag) {}
+        SimpleShader()
+            : ShaderProgram(simpleVert, simpleFrag) {
+            m_mvpLoc = glGetUniformLocation(m_shaderProgramID, "mvp");
+        }
 
+        const void setMVP(const glm::mat4 mvp) const {
+            glUniformMatrix4fv(m_mvpLoc, 1, GL_FALSE, glm::value_ptr(mvp));
+        }
+
+    private:
+        uint32_t m_mvpLoc;
     };
 
 }
 
-#endif /* COLOR_SHADER_H */
+#endif /* SIMPLE_SHADER_H */
