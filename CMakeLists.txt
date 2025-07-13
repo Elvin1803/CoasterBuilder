@@ -21,11 +21,15 @@ target_precompile_headers(CoasterBuilder PRIVATE src/pch.h)
 # Link with GLFW
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 add_subdirectory(libs/glfw)
-target_link_libraries(CoasterBuilder PUBLIC glfw)
+target_link_libraries(CoasterBuilder PRIVATE glfw)
 
 # Link with GLAD
 add_subdirectory(libs/glad)
 target_link_libraries(CoasterBuilder PRIVATE glad)
+
+# Link with GLM
+add_subdirectory(libs/glm)
+target_link_libraries(CoasterBuilder PRIVATE glm)
 
 # Define DEBUG symbol for Debug builds
 target_compile_definitions(CoasterBuilder PRIVATE
