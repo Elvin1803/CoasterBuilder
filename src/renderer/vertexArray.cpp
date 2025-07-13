@@ -5,18 +5,12 @@
 
 namespace renderer {
 
-    static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type)
-    {
-        switch (type)
-        {
-        case ShaderDataType::Float:
-            return GL_FLOAT;
-        case ShaderDataType::Int:
-            return GL_INT;
-        case ShaderDataType::Bool:
-            return GL_BOOL;
-        default:
-            return 0;
+    static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type) {
+        switch (type) {
+        case ShaderDataType::Float: return GL_FLOAT;
+        case ShaderDataType::Int:   return GL_INT;
+        case ShaderDataType::Bool:  return GL_BOOL;
+        default:                    return 0;
         }
     }
 

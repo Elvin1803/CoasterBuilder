@@ -3,11 +3,9 @@
 
 #include "utils/logger.h"
 
-namespace renderer
-{
+namespace renderer {
 
-    ShaderProgram::ShaderProgram(const char* vertexCode, const char* fragmentCode)
-    {
+    ShaderProgram::ShaderProgram(const char* vertexCode, const char* fragmentCode) {
         // Vertex shader
         uint32_t vertexShader = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertexShader, 1, &vertexCode, nullptr);
@@ -16,8 +14,7 @@ namespace renderer
         int success;
         char infoLog[512];
         glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-        if (!success)
-        {
+        if (!success) {
             glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
             LOG_ERROR("Could not compile vertex shader: {}", infoLog);
         }
@@ -28,8 +25,7 @@ namespace renderer
         glCompileShader(fragmentShader);
         // check for shader compile errors
         glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-        if (!success)
-        {
+        if (!success) {
             glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
             LOG_ERROR("Could not compile fragment shader: {}", infoLog);
         }
@@ -45,13 +41,11 @@ namespace renderer
         glDeleteShader(fragmentShader);
     }
 
-    ShaderProgram::~ShaderProgram()
-    {
+    ShaderProgram::~ShaderProgram() {
         glDeleteProgram(m_shaderProgramID);
     }
 
-    void ShaderProgram::UseShader() const
-    {
+    void ShaderProgram::UseShader() const {
         glUseProgram(m_shaderProgramID);
     }
 

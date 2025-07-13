@@ -10,11 +10,9 @@
 #define LOG_ERROR(...) utils::logger::GetLogger().Log(utils::logLevel::LOG_ERROR, __VA_ARGS__);
 #define LOG_FATAL(...) utils::logger::GetLogger().Log(utils::logLevel::LOG_FATAL, __VA_ARGS__);
 
-namespace utils
-{
+namespace utils {
 
-    enum class logLevel
-    {
+    enum class logLevel {
         LOG_INFO = 0,
         LOG_TRACE,
         LOG_DEBUG,
@@ -23,15 +21,13 @@ namespace utils
         LOG_FATAL
     };
 
-    class logger
-    {
+    class logger {
     public:
         static logger& GetLogger();
         void SetOutputFile(const std::string& filename);
 
         template<typename... Args>
-        void Log(const logLevel level, const std::string& format_str, Args... args)
-        {
+        void Log(const logLevel level, const std::string& format_str, Args... args) {
             WriteLog(level, std::vformat(format_str, std::make_format_args(args...)));
         }
 

@@ -1,8 +1,7 @@
 #include <pch.h>
 #include "logger.h"
 
-namespace utils
-{
+namespace utils {
 
     logger* logger::m_instance = nullptr;
 
@@ -11,8 +10,7 @@ namespace utils
     }
 
     logger& logger::GetLogger() {
-        if (!m_instance)
-        {
+        if (!m_instance) {
             m_instance = new logger();
         }
 
