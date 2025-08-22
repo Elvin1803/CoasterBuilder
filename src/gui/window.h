@@ -18,6 +18,6 @@ namespace UI {
         GLFWwindow *m_window;
     };
 
-} // UI
+}
 
 #endif /* WINDOW_H */

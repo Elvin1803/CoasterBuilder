@@ -1,7 +1,7 @@
 #include <pch.h>
 #include "camera.h"
 
-namespace renderer {
+namespace scene {
 
     Camera::Camera(ViewportRect viewportRect)
         : m_viewportRect(viewportRect) {

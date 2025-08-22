@@ -3,7 +3,7 @@
 
 #include "utils/logger.h"
 
-namespace renderer {
+namespace graphics {
 
     static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type) {
         switch (type) {

@@ -27,4 +27,6 @@
 #include <string>
 #include <sstream>
 
+#include <unordered_map>
+
 #endif /* PCH_H */

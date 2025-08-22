@@ -1,7 +1,7 @@
 #ifndef SHADER_PROGRAM_H
 #define SHADER_PROGRAM_H
 
-namespace renderer {
+namespace graphics {
 
     class ShaderProgram {
     public:

@@ -3,7 +3,7 @@
 
 #include "buffer.h"
 
-namespace renderer {
+namespace graphics {
 
     class VertexArray {
     public:

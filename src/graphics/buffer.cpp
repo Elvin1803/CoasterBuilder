@@ -1,7 +1,7 @@
 #include <pch.h>
 #include "buffer.h"
 
-namespace renderer {
+namespace graphics {
 
     VertexBuffer::VertexBuffer(const float *vertices, uint32_t size, std::shared_ptr<BufferLayout> layout)
         : m_layout(layout) {

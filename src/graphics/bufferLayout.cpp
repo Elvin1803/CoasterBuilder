@@ -1,7 +1,7 @@
 #include <pch.h>
 #include "bufferLayout.h"
 
-namespace renderer {
+namespace graphics {
 
     BufferLayout::BufferLayout(std::vector<BufferLayoutElement> layout) {
         uint32_t offset = 0;

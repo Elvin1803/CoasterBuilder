@@ -1,7 +1,7 @@
 #ifndef BUFFER_LAYOUT_H
 #define BUFFER_LAYOUT_H
 
-namespace renderer {
+namespace graphics {
 
     enum class ShaderDataType {
         None = 0,

@@ -4,7 +4,7 @@
 #include <pch.h>
 #include "ShaderProgram.h"
 
-namespace renderer {
+namespace graphics {
 
     inline const char* simpleVert =
 #include "simple.vert"

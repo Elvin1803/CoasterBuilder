@@ -3,7 +3,7 @@
 
 #include "bufferLayout.h"
 
-namespace renderer {
+namespace graphics {
 
     class Buffer {
     public:

@@ -3,7 +3,7 @@
 
 #include "utils/logger.h"
 
-namespace renderer {
+namespace graphics {
 
     ShaderProgram::ShaderProgram(const char* vertexCode, const char* fragmentCode) {
         // Vertex shader
