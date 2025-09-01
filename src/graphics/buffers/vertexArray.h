@@ -11,6 +11,7 @@ namespace graphics {
         ~VertexArray();
 
         void Bind() const;
+        uint32_t GetIndexLength() { return m_ibo->GetCount(); };
 
     private:
         uint32_t m_vaoID;

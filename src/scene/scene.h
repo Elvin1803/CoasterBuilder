@@ -1,9 +1,10 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "camera.h"
-#include "modelInstance.h"
-#include "graphics/shaders/simpleShader.h"
+#include "modelManager.h"
+
+#include "graphics/model/modelInstance.h"
+#include "graphics/camera.h"
 
 namespace scene {
 
@@ -15,10 +16,17 @@ namespace scene {
         void Update(float timestep);
         void Render();
 
+        graphics::Camera& GetCamera() { return m_camera; };
+        std::vector<graphics::ModelInstance>& GetModels() { return m_models; };
+
+        void SpawnModel(std::string name);
+
     private:
-        Camera m_camera;
-        graphics::SimpleShader m_shader;
-        std::vector<ModelInstance> m_models;
+        graphics::Camera m_camera;
+        std::vector<graphics::ModelInstance> m_models;
+
+    private:
+        ModelManager m_modelManager;
     };
 
 }

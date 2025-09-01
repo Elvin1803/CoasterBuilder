@@ -1,5 +1,8 @@
 .cache/*
 build/*
-tools/*
+
+*.blend
+*.obj
+*.mtl
 
 compile_commands.json

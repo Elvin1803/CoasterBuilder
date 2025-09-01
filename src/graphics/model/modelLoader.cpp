@@ -1,10 +1,18 @@
-#include <memory>
 #include <pch.h>
 #include "modelLoader.h"
+
+#include "graphics/buffers/buffer.h"
 
 #include "utils/logger.h"
 
 namespace graphics::modelLoader {
+
+    std::shared_ptr<graphics::BufferLayout> layout = std::make_shared<graphics::BufferLayout>(
+        std::vector<graphics::BufferLayoutElement>{
+            { 3, graphics::ShaderDataType::Float }, // Position
+            { 3, graphics::ShaderDataType::Float }, // Normals
+            { 2, graphics::ShaderDataType::Float }, // Texture coordinates
+        });
 
     std::shared_ptr<graphics::Model> LoadModel(const std::string& filename) {
         std::ifstream file(filename, std::ios::binary);
@@ -13,6 +21,9 @@ namespace graphics::modelLoader {
             return nullptr;
         }
 
+        std::shared_ptr<Model> model = std::make_shared<Model>();
+
+        // Reading file
         while (file.peek() != EOF) {
             // Read name of the mesh
             uint32_t nameLength;
@@ -53,9 +64,28 @@ textureCoordinates {}, {}",
                           indices[i + 0], indices[i + 1], indices[i + 2]);
             }
 #endif /* DEBUG */
+
+            std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+
+            std::unique_ptr<VertexBuffer> vbo =
+                std::make_unique<VertexBuffer>(vertices.data(), vertices.size() * sizeof(float), layout);
+            std::unique_ptr<IndexBuffer> ibo =
+                std::make_unique<IndexBuffer>(indices.data(), indices.size() * sizeof(uint32_t));
+            const std::shared_ptr<VertexArray> vao =
+                std::make_shared<VertexArray>(std::move(vbo), std::move(ibo));
+
+            mesh->AddSubMesh(vao);
+            ModelNode node;
+            node.mesh = mesh;
+
+            model->AddNode(name, node);
+
+            // FIXME: calculate origin etc
+            // FIXME: handle parenting
         }
 
-        return nullptr;
+        // FIXME
+        return model;
     }
 
 }

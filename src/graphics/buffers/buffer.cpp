@@ -22,7 +22,8 @@ namespace graphics {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
-    IndexBuffer::IndexBuffer(const uint32_t *indices, uint32_t count) {
+    IndexBuffer::IndexBuffer(const uint32_t *indices, uint32_t count)
+        : m_count(count) {
         glCreateBuffers(1, &m_bufferID);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_bufferID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, count, indices, GL_STATIC_DRAW);

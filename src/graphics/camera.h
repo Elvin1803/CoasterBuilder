@@ -1,7 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-namespace scene {
+namespace graphics {
 
     struct ViewportRect {
         uint32_t x;
@@ -12,18 +12,15 @@ namespace scene {
 
     class Camera {
     public:
-        Camera(ViewportRect viewportRect);
+        Camera(const ViewportRect& rect);
         ~Camera() = default;
 
         const glm::mat4 GetViewProjection() const { return m_projectionMatrix * m_viewMatrix; };
 
-        // Pourquoi en ifdef DEBUG ce truc ???
-        // #ifdef DEBUG
         glm::vec3 GetPosition() const { return m_position; };
         void SetPosition(glm::vec3 newPosition) { m_position = newPosition; UpdateViewMatrix(); };
         glm::vec3 GetPitchYawRoll() const { return m_pitchYawRoll; };
         void SetPitchYawRoll(glm::vec3 newPitchYawRoll) { m_pitchYawRoll = newPitchYawRoll; UpdateViewMatrix(); };
-         // #endif /* DEBUG */
 
     private:
         void UpdateProjectionMatrix();
@@ -33,7 +30,7 @@ namespace scene {
         float m_fov = 70;
         float m_nearPlane = 0.1f;
         float m_farPlane = 1000.0f;
-        ViewportRect m_viewportRect;
+        ViewportRect m_viewport;
         glm::mat4 m_projectionMatrix = glm::mat4(1.0f);
 
         glm::vec3 m_position = glm::vec3(0);

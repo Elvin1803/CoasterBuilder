@@ -1,15 +1,16 @@
 #include <pch.h>
 #include "camera.h"
 
-namespace scene {
+namespace graphics {
 
-    Camera::Camera(ViewportRect viewportRect)
-        : m_viewportRect(viewportRect) {
+    Camera::Camera(const ViewportRect& rect)
+        : m_viewport(rect) {
         UpdateProjectionMatrix();
     }
 
     void Camera::UpdateProjectionMatrix() {
-        float aspectRatio = (float)m_viewportRect.width / (float)m_viewportRect.height;
+        float aspectRatio = (float)m_viewport.width / (float)m_viewport.width;
+
         m_projectionMatrix =
             glm::perspective(glm::radians(m_fov), aspectRatio, m_nearPlane, m_farPlane);
     }
