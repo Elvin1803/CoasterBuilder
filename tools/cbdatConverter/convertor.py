@@ -6,6 +6,7 @@ class mesh:
             self.name = name
             self.vertexAttribs = [] # 3 floats (Position), 3 floats (Normals), 2 floats (TexCoords)
             self.indices = []
+            self.parent = ""
             # TODO: Materials
 
         def __str__(self):
@@ -35,6 +36,9 @@ def parse_model(file):
                 vertexAttribList = []
                 objects.append(mesh(values[0]))
 
+            if prefix == 'p': # Parent mesh
+                objects[-1].parent = values[0]
+
             if prefix == 'v':
                 vertices.append(values)
             if prefix == 'vn':
@@ -60,6 +64,7 @@ def parse_model(file):
 def writeToFile(objects, outputFile):
     for o in objects:
         # nameLen > name
+        # parentNameLen > Parentname (parentNameLen == 0 if there's no parent)
         # vertexAttributeLen > vertexAttributes (3 floats pos, 3 floats normals, 2 floats UV)
         # indicesLen > indices
 
@@ -67,6 +72,10 @@ def writeToFile(objects, outputFile):
         name_bytes = o.name.encode('utf-8')
         content = struct.pack('i', len(name_bytes)) + name_bytes
         print("nameLen: " + str(len(name_bytes)))
+        # parentName
+        parent_name_bytes = o.parent.encode('utf-8')
+        content += struct.pack('i', len(parent_name_bytes)) + parent_name_bytes
+        print("parentNameLen: " + str(len(parent_name_bytes)))
         # vertexAttributes
         content += struct.pack('i', len(o.vertexAttribs) * len(o.vertexAttribs[0]) * 4)
         print("vertexAttribsLen: " + str(len(o.vertexAttribs) * len(o.vertexAttribs[0]) * 4))

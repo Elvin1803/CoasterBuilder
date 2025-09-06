@@ -9,7 +9,7 @@ namespace graphics {
     }
 
     void Camera::UpdateProjectionMatrix() {
-        float aspectRatio = (float)m_viewport.width / (float)m_viewport.width;
+        float aspectRatio = (float)m_viewport.width / (float)m_viewport.height;
 
         m_projectionMatrix =
             glm::perspective(glm::radians(m_fov), aspectRatio, m_nearPlane, m_farPlane);

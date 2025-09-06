@@ -9,7 +9,7 @@ namespace graphics {
         glm::vec3 origin = glm::vec3(0); // Local origin
         //glm::mat4 defaultTransform = glm::mat4(1.0f);
         std::shared_ptr<Mesh> mesh = nullptr;
-        std::shared_ptr<ModelNode> parent = nullptr;
+        int32_t parentIndex = -1;
     };
 
     class Model {
@@ -19,7 +19,7 @@ namespace graphics {
         Model();
         ~Model() = default;
 
-        void AddNode(std::string& name, ModelNode& node);
+        void AddNode(std::string& name, std::string& parentName, ModelNode& node);
         std::vector<ModelNode> GetNodes() { return m_modelNodes; };
 
     private:

@@ -1,9 +1,9 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+#include "entity.h"
 #include "modelManager.h"
 
-#include "graphics/model/modelInstance.h"
 #include "graphics/camera.h"
 
 namespace scene {
@@ -17,15 +17,13 @@ namespace scene {
         void Render();
 
         graphics::Camera& GetCamera() { return m_camera; };
-        std::vector<graphics::ModelInstance>& GetModels() { return m_models; };
+        std::vector<std::unique_ptr<Entity>>& GetEntities() { return m_entities; };
 
-        void SpawnModel(std::string name);
-
-    private:
+    protected:
         graphics::Camera m_camera;
-        std::vector<graphics::ModelInstance> m_models;
+        std::vector<std::unique_ptr<Entity>> m_entities;
 
-    private:
+    protected:
         ModelManager m_modelManager;
     };
 

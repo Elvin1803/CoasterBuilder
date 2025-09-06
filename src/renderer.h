@@ -2,9 +2,7 @@
 #define RENDERER_H
 
 #include "window.h"
-
-#include "graphics/camera.h"
-#include "graphics/model/modelInstance.h"
+#include "scene/scene.h"
 
 class Renderer {
 public:
@@ -14,7 +12,7 @@ public:
     void BeginFrame();
     void EndFrame();
 
-    void Render(std::vector<graphics::ModelInstance> models, graphics::Camera cam);
+    void Render(scene::Scene& scene);
 
 private:
     Window* m_window;

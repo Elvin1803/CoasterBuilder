@@ -1,8 +1,13 @@
 #include "renderer.h"
-#include "scene/scene.h"
 #include "utils/logger.h"
 #include "utils/paths.h"
 #include "window.h"
+
+#ifdef DEBUG
+#include "scene/graphics_test/gyroscope_scene/gyroscope_scene.h"
+#else
+#include "scene/scene.h"
+#endif // DEBUG
 
 int main() {
 #ifdef RELEASE
@@ -14,8 +19,11 @@ int main() {
     Window window(1280, 720, "CoasterBuilder"); // TODO load config for size
     Renderer renderer(&window);
 
+#ifdef DEBUG
+    scene::GyroscopeScene scene;
+#else
     scene::Scene scene;
-    scene.SpawnModel("test.cbdat");
+#endif // DEBUG
 
     while (!window.ShouldClose()) {
         window.PollEvents();
@@ -24,9 +32,7 @@ int main() {
 
         // Rendering
         renderer.BeginFrame();
-        auto& models = scene.GetModels();
-        auto& cam = scene.GetCamera();
-        renderer.Render(models, cam);
+        renderer.Render(scene);
         renderer.EndFrame();
 
         window.SwapBuffers();

@@ -35,6 +35,16 @@ namespace graphics::modelLoader {
             LOG_TRACE("Mesh name: {}", name);
 #endif /* DEBUG */
 
+            // Check if the mesh has a parent
+            uint32_t parentNameLength;
+            file.read(reinterpret_cast<char*>(&parentNameLength), sizeof(parentNameLength));
+            std::string parentName(parentNameLength, '\0');
+            file.read(&parentName[0], parentNameLength);
+
+#ifdef DEBUG
+            LOG_TRACE("Parent Mesh name: {}", parentName);
+#endif /* DEBUG */
+
             uint32_t vertexAttribsLength;
             file.read(reinterpret_cast<char*>(&vertexAttribsLength), sizeof(vertexAttribsLength));
             std::vector<float> vertices(vertexAttribsLength / sizeof(float));
@@ -78,7 +88,7 @@ textureCoordinates {}, {}",
             ModelNode node;
             node.mesh = mesh;
 
-            model->AddNode(name, node);
+            model->AddNode(name, parentName, node);
 
             // FIXME: calculate origin etc
             // FIXME: handle parenting

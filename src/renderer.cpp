@@ -18,23 +18,27 @@ void Renderer::BeginFrame() {
 void Renderer::EndFrame() {
 }
 
-void Renderer::Render(std::vector<graphics::ModelInstance> models, graphics::Camera cam) {
+void Renderer::Render(scene::Scene& scene) {
+    // FIXME: Shaders should be in materials
     graphics::SimpleShader shader;
     shader.UseShader();
 
+    auto& cam = scene.GetCamera();
     auto& viewProj = cam.GetViewProjection();
 
     // FIXME: Pas opti
-    for (auto& modelInstance : models) {
-        const auto& modelNodes =  modelInstance.GetModel()->GetNodes();
-        const auto& instanceNodes =  modelInstance.GetNodes();
+    for (auto& entity : scene.GetEntities()) {
+        auto modelInstance = entity->GetModel();
+        modelInstance.RecalculateTransforms();
+        const auto& modelNodes =  modelInstance.m_model->GetNodes();
+        const auto& instanceNodes =  modelInstance.m_instanceNodes;
 
         for (auto i = 0; i < modelNodes.size(); i++) {
             const auto& modelNode = modelNodes[i];
             const auto& instanceNode = instanceNodes[i];
 
             // FIXME: Calculate modelMatrix here
-            auto mvp = viewProj;
+            auto mvp = viewProj * instanceNodes[i].modelMatrix;
             shader.setMVP(mvp);
 
             for (auto& submesh : modelNode.mesh->GetSubMesh()) {
