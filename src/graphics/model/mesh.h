@@ -2,6 +2,7 @@
 #define MESH_H
 
 #include "graphics/buffers/vertexArray.h"
+#include "material.h"
 
 namespace graphics {
 
@@ -9,14 +10,15 @@ namespace graphics {
     private:
         struct SubMesh {
             std::shared_ptr<VertexArray> vao;
-            //FIXME: Add material
+            std::shared_ptr<Material> material;
         };
 
     public:
         Mesh() = default;
         ~Mesh() = default;
 
-        void AddSubMesh(const std::shared_ptr<VertexArray> vao);
+        void AddSubMesh(std::shared_ptr<VertexArray> vao);
+        void AddSubMesh(std::shared_ptr<VertexArray> vao, std::shared_ptr<Material> material);
         std::vector<SubMesh> GetSubMesh() { return m_submeshes; };
 
     private:

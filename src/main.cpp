@@ -5,6 +5,7 @@
 
 #ifdef DEBUG
 #include "scene/graphics_test/gyroscope_scene/gyroscope_scene.h"
+#include "scene/graphics_test/texture_scene/texture_scene.h"
 #else
 #include "scene/scene.h"
 #endif // DEBUG
@@ -20,7 +21,8 @@ int main() {
     Renderer renderer(&window);
 
 #ifdef DEBUG
-    scene::GyroscopeScene scene;
+    //scene::GyroscopeScene scene;
+    scene::TextureScene scene;
 #else
     scene::Scene scene;
 #endif // DEBUG

@@ -42,6 +42,7 @@ void Renderer::Render(scene::Scene& scene) {
             shader.setMVP(mvp);
 
             for (auto& submesh : modelNode.mesh->GetSubMesh()) {
+                shader.setMaterial(submesh.material.get());
                 submesh.vao->Bind();
                 glDrawElements(GL_TRIANGLES, submesh.vao->GetIndexLength(), GL_UNSIGNED_INT, 0);
             }

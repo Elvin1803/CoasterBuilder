@@ -1,21 +1,85 @@
-import sys
+from PIL import Image
+import os
 import struct
+import sys
+
+
+workingDir = ''
+
 
 class mesh:
-        def __init__(self, name):
-            self.name = name
-            self.vertexAttribs = [] # 3 floats (Position), 3 floats (Normals), 2 floats (TexCoords)
-            self.indices = []
-            self.parent = ""
-            # TODO: Materials
+    def __init__(self, name):
+        self.name = name
+        self.vertexAttribs = [] # 3 floats (Position), 3 floats (Normals), 2 floats (TexCoords)
+        self.indices = []
+        self.parent = ""
+        self.material = ""
 
-        def __str__(self):
-            return f"{self.name}:\n\tvertexAttributes:{self.vertexAttribs}\n\tindices:{self.indices}\n"
+
+class image:
+    def __init__(self, width, height, data):
+        self.width = width
+        self.height = height
+        self.data = data # Stored as RGBA (one pixel -> 4 bytes)
+
+
+class material:
+    def __init__(self, name):
+        self.name = name
+        self.ambiantColor = [0, 0, 0]
+        self.diffuseColor = [0, 0, 0]
+        self.specular = [0, 0, 0]
+        self.specularExponent = 0
+        self.emissiveColor = [0, 0, 0]
+        self.dissolve = 0
+        self.opticalDensity = 0
+        self.textureKd = None # Stored as RGBA (one pixel -> 4 bytes)
+        # FIXME: implement other material properties ?
+
+
+meshes = []
+materials = []
+
+
+def parse_material(file):
+    with open(file) as f:
+        for line in f:
+            if line.startswith('#'):
+                continue
+
+            tokens = line.strip().split()
+            if not tokens:
+                continue
+
+            prefix, values = tokens[0], tokens[1:]
+
+            if prefix == 'newmtl':
+                materials.append(material(values[0]))
+
+            if prefix == 'Ka':
+                materials[-1].ambiantColor = list(map(float, values))
+            if prefix == 'Kd':
+                materials[-1].diffuseColor = list(map(float, values))
+            if prefix == 'Ks':
+                materials[-1].specular = list(map(float, values))
+            if prefix == 'Ns':
+                materials[-1].specularExponent = float(values[0])
+            if prefix == 'Ke':
+                materials[-1].emissiveColor = list(map(float, values))
+            if prefix == 'd':
+                materials[-1].dissolve = float(values[0])
+            if prefix == 'Ni':
+                materials[-1].opticalDensity = float(values[0])
+            if prefix == 'map_Kd':
+                img = Image.open(values[0]).convert("RGBA")
+                img = img.transpose(Image.FLIP_TOP_BOTTOM)
+                width, height = img.size
+                data = img.tobytes("raw", "RGBA")
+                materials[-1].textureKd = image(width, height, data)
+
 
 
 def parse_model(file):
-    objects = []
-
     vertices = []
     normals = []
     texCoords = []
@@ -31,13 +95,21 @@ def parse_model(file):
 
             prefix, values = tokens[0], tokens[1:]
 
+            # Related to material
+            if prefix == 'mtllib':
+                parse_material(workingDir + '/' + values[0])
+
+            # Related to geometry
             if prefix == 'o':
                 # TODO: handle origin
                 vertexAttribList = []
-                objects.append(mesh(values[0]))
+                meshes.append(mesh(values[0]))
 
             if prefix == 'p': # Parent mesh
-                objects[-1].parent = values[0]
+                meshes[-1].parent = values[0]
+
+            if prefix == 'usemtl': # Material
+                meshes[-1].material = values[0]
 
             if prefix == 'v':
                 vertices.append(values)
@@ -50,32 +122,80 @@ def parse_model(file):
                 for point in values:
                     for i in range(len(vertexAttribList)):
                         if vertexAttribList[i] == point:
-                            objects[-1].indices.append(i)
+                            meshes[-1].indices.append(i)
                             break;
                     else:
                         vertexAttribList.append(point)
                         vtn = [(int(c) - 1) for c in point.split('/')]
-                        objects[-1].vertexAttribs.append(vertices[vtn[0]] + normals[vtn[2]] + texCoords[vtn[1]])
-                        objects[-1].indices.append(len(objects[-1].vertexAttribs) - 1)
-
-    return objects
+                        meshes[-1].vertexAttribs.append(vertices[vtn[0]] + normals[vtn[2]] + texCoords[vtn[1]])
+                        meshes[-1].indices.append(len(meshes[-1].vertexAttribs) - 1)
 
 
-def writeToFile(objects, outputFile):
-    for o in objects:
+def writeToFile(outputFile):
+    content = b''
+    # Materials
+    # Start by writing the number of materials to parse
+    content += struct.pack('i', len(materials))
+    print("Number of materials: " + str(len(materials)))
+
+    def pack_list(lst, count=3):
+        if lst:
+            return struct.pack(f'{count}f', *lst)
+        return struct.pack(f'{count}f', *([0.0] * count))
+
+    for m in materials:
         # nameLen > name
-        # parentNameLen > Parentname (parentNameLen == 0 if there's no parent)
+        # ambiant color (3 floats)
+        # diffuse color (3 floats)
+        # specular (1 float)
+        # emissive color (3 floats)
+        # dissolve (1 float)
+        # optical density (1 float)
+        # width, height, textureKd (one pixel = 4 bytes RGBA) (if width == 0 there is no image)
+
+        # name
+        name_bytes = m.name.encode('utf-8')
+        content += struct.pack('i', len(name_bytes)) + name_bytes
+        print("nameLen: " + str(len(name_bytes)))
+
+        content += pack_list(m.ambiantColor)
+        content += pack_list(m.diffuseColor)
+        content += pack_list(m.specular)
+        content += struct.pack('f', m.specularExponent)
+        content += pack_list(m.emissiveColor)
+        content += struct.pack('f', m.dissolve)
+        content += struct.pack('f', m.opticalDensity)
+        # textureKd
+        if m.textureKd:
+            content += struct.pack('i', m.textureKd.width)
+            content += struct.pack('i', m.textureKd.height)
+            content += m.textureKd.data
+        else:
+            content += struct.pack('i', 0)
+
+    # Meshes
+    # Write the number of meshes to parse
+    content += struct.pack('i', len(meshes))
+    print("Number of meshes: " + str(len(meshes)))
+    for o in meshes:
+        # nameLen > name
+        # parentNameLen > parentName (parentNameLen == 0 if there's no parent)
+        # MaterialNameLen > materialName (materialNameLen == 0 if there's no material)
         # vertexAttributeLen > vertexAttributes (3 floats pos, 3 floats normals, 2 floats UV)
         # indicesLen > indices
 
         # name
         name_bytes = o.name.encode('utf-8')
-        content = struct.pack('i', len(name_bytes)) + name_bytes
+        content += struct.pack('i', len(name_bytes)) + name_bytes
         print("nameLen: " + str(len(name_bytes)))
         # parentName
         parent_name_bytes = o.parent.encode('utf-8')
         content += struct.pack('i', len(parent_name_bytes)) + parent_name_bytes
         print("parentNameLen: " + str(len(parent_name_bytes)))
+        # materialName
+        material_name_bytes = o.material.encode('utf-8')
+        content += struct.pack('i', len(material_name_bytes)) + material_name_bytes
+        print("materialNameLen: " + str(len(material_name_bytes)))
         # vertexAttributes
         content += struct.pack('i', len(o.vertexAttribs) * len(o.vertexAttribs[0]) * 4)
         print("vertexAttribsLen: " + str(len(o.vertexAttribs) * len(o.vertexAttribs[0]) * 4))
@@ -85,8 +205,8 @@ def writeToFile(objects, outputFile):
         content += struct.pack('i', len(o.indices) * 4)
         content += b''.join(struct.pack('i', int(i)) for i in o.indices)
 
-        with open(outputFile, "ab") as f:
-            f.write(content)
+    with open(outputFile, "ab") as f:
+        f.write(content)
 
 
 if __name__ == "__main__":
@@ -96,5 +216,6 @@ if __name__ == "__main__":
 
     inputFile = sys.argv[1]
     outputFile = sys.argv[2]
-    objects = parse_model(inputFile)
-    writeToFile(objects, outputFile)
+    workingDir = os.path.dirname(inputFile)
+    parse_model(inputFile)
+    writeToFile(outputFile)
