@@ -7,7 +7,7 @@ namespace scene {
     Scene::Scene()
         // Fixme: camera dimensions
         : m_camera(graphics::ViewportRect{0, 0, 1280, 720}){
-        m_camera.SetPosition(glm::vec3(0, 0, 3));
+        m_camera.SetPosition(glm::vec3(0, 0, 1));
     }
 
     void Scene::Update(float timestep) {
