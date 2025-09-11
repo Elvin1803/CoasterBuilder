@@ -1,3 +1,15 @@
+'''
+Script to convert custom .obj file format to .cbdat file format.
+
+The custom .obj file format supports:
+  - Mesh parenting: Specified by "p" prefix when parsing an object.
+  - Mesh custom origin: Specified by "ori" prefix when parsing an object.
+
+The custom .obj file format does NOT support:
+  - Not triangulated faces
+  - Multiple materials per object
+'''
+
 from PIL import Image
 import os
 import struct
@@ -13,6 +25,7 @@ class mesh:
         self.vertexAttribs = [] # 3 floats (Position), 3 floats (Normals), 2 floats (TexCoords)
         self.indices = []
         self.parent = ""
+        self.origin = [0, 0, 0]
         self.material = ""
 
 
@@ -101,18 +114,20 @@ def parse_model(file):
 
             # Related to geometry
             if prefix == 'o':
-                # TODO: handle origin
                 vertexAttribList = []
                 meshes.append(mesh(values[0]))
 
             if prefix == 'p': # Parent mesh
                 meshes[-1].parent = values[0]
 
+            if prefix == 'ori': # Custom mesh origin
+                meshes[-1].origin = list(map(float, values))
+
             if prefix == 'usemtl': # Material
                 meshes[-1].material = values[0]
 
             if prefix == 'v':
-                vertices.append(values)
+                vertices.append([float(x) - o for x, o in zip(values, meshes[-1].origin)])
             if prefix == 'vn':
                 normals.append(values)
             if prefix == 'vt':
@@ -180,6 +195,7 @@ def writeToFile(outputFile):
     for o in meshes:
         # nameLen > name
         # parentNameLen > parentName (parentNameLen == 0 if there's no parent)
+        # origin (3 floats)
         # MaterialNameLen > materialName (materialNameLen == 0 if there's no material)
         # vertexAttributeLen > vertexAttributes (3 floats pos, 3 floats normals, 2 floats UV)
         # indicesLen > indices
@@ -187,14 +203,20 @@ def writeToFile(outputFile):
         # name
         name_bytes = o.name.encode('utf-8')
         content += struct.pack('i', len(name_bytes)) + name_bytes
+        print("name: " + str(name_bytes))
         print("nameLen: " + str(len(name_bytes)))
         # parentName
         parent_name_bytes = o.parent.encode('utf-8')
         content += struct.pack('i', len(parent_name_bytes)) + parent_name_bytes
+        print("parentName: " + str(parent_name_bytes))
         print("parentNameLen: " + str(len(parent_name_bytes)))
+        # Custom origin
+        content += pack_list(o.origin)
+        print("origin: " + str(o.origin))
         # materialName
         material_name_bytes = o.material.encode('utf-8')
         content += struct.pack('i', len(material_name_bytes)) + material_name_bytes
+        print("materialName: " + str(material_name_bytes))
         print("materialNameLen: " + str(len(material_name_bytes)))
         # vertexAttributes
         content += struct.pack('i', len(o.vertexAttribs) * len(o.vertexAttribs[0]) * 4)

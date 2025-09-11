@@ -24,7 +24,7 @@ namespace graphics {
             if (m_instanceNodes[i].isDirty) {
                 auto orientation = glm::quat(glm::radians(m_instanceNodes[i].rotation) * glm::vec3(1, -1, -1));
                 m_instanceNodes[i].modelMatrix =
-                    glm::translate(glm::mat4(1.0f), m_instanceNodes[i].position) *
+                    glm::translate(glm::mat4(1.0f), m_instanceNodes[i].position + m_model->m_modelNodes[i].origin) *
                     glm::toMat4(orientation) *
                     glm::scale(glm::mat4(1.0f), m_instanceNodes[i].scale);
 

@@ -115,6 +115,9 @@ namespace graphics::modelLoader {
             LOG_TRACE("Parent Mesh name: {}", parentName);
 #endif /* DEBUG */
 
+            glm::vec3 origin;
+            file.read(reinterpret_cast<char*>(&origin), sizeof(glm::vec3));
+
             // Check if the mesh has a material
             uint32_t materialNameLength;
             file.read(reinterpret_cast<char*>(&materialNameLength), sizeof(materialNameLength));
@@ -171,14 +174,11 @@ textureCoordinates {}, {}",
             }
             ModelNode node;
             node.mesh = mesh;
+            node.origin = origin;
 
             model->AddNode(name, parentName, node);
-
-            // FIXME: calculate origin etc
-            // FIXME: handle parenting
         }
 
-        // FIXME
         return model;
     }
 

@@ -7,7 +7,6 @@ namespace graphics {
 
     struct ModelNode {
         glm::vec3 origin = glm::vec3(0); // Local origin
-        //glm::mat4 defaultTransform = glm::mat4(1.0f);
         std::shared_ptr<Mesh> mesh = nullptr;
         int32_t parentIndex = -1;
     };

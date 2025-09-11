@@ -13,7 +13,7 @@ namespace graphics {
         glm::vec3 scale = glm::vec3(1.0f);
 
         glm::mat4 modelMatrix = glm::mat4(1.0f);
-        bool isDirty = false;
+        bool isDirty = true;
     };
 
     class ModelInstance {
