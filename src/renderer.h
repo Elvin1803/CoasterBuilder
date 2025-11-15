@@ -7,7 +7,6 @@
 class Renderer {
 public:
     Renderer(Window *window);
-    ~Renderer() = default;
 
     void BeginFrame();
     void EndFrame();

@@ -11,7 +11,6 @@ namespace scene {
     class Scene {
     public:
         Scene();
-        ~Scene() = default;
 
         void Update(float timestep);
         void Render();

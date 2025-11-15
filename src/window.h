@@ -5,8 +5,9 @@ class Window {
 public:
     Window(const uint16_t width, const uint16_t height, const std::string &title);
     ~Window();
-    Window(const Window&) = delete;
-    Window& operator=(Window&) = delete;
+
+    Window(const Window& other) = delete;
+    Window& operator=(const Window& other) = delete;
 
     void PollEvents() const;
     bool ShouldClose() const;

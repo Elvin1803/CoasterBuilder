@@ -7,6 +7,7 @@ namespace UI {
     public:
         Frame();
         ~Frame();
+
         Frame(const Frame&) = delete;
         Frame& operator=(Frame&) = delete;
 

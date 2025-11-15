@@ -21,7 +21,6 @@ namespace graphics {
 
     public:
         ModelInstance(std::shared_ptr<graphics::Model> model);
-        ~ModelInstance() = default;
 
         glm::vec3 GetMeshPosition(std::string mesh) { return GetMeshTransform(mesh).position; };
         glm::vec3 GetMeshRotation(std::string mesh) { return GetMeshTransform(mesh).rotation; };

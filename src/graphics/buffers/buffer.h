@@ -19,8 +19,11 @@ namespace graphics {
         VertexBuffer(const float *vertices, uint32_t size, std::shared_ptr<BufferLayout> layout);
         ~VertexBuffer();
 
-        virtual void Bind() const;
-        virtual void Unbind() const;
+        VertexBuffer(const VertexBuffer& other) = delete;
+        VertexBuffer& operator=(const VertexBuffer& other) = delete;
+
+        virtual void Bind() const override;
+        virtual void Unbind() const override;
         BufferLayout *GetLayout() const { return m_layout.get(); };
 
     private:
@@ -32,8 +35,11 @@ namespace graphics {
         IndexBuffer(const uint32_t *indices, uint32_t count);
         ~IndexBuffer();
 
-        virtual void Bind() const;
-        virtual void Unbind() const;
+        IndexBuffer(const IndexBuffer& other) = delete;
+        IndexBuffer& operator=(const IndexBuffer& other) = delete;
+
+        virtual void Bind() const override;
+        virtual void Unbind() const override;
         inline  uint32_t GetCount() const { return m_count; };
 
     private:

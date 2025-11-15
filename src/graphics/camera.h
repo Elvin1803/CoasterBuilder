@@ -13,7 +13,6 @@ namespace graphics {
     class Camera {
     public:
         Camera(const ViewportRect& rect);
-        ~Camera() = default;
 
         const glm::mat4 GetViewProjection() const { return m_projectionMatrix * m_viewMatrix; };
 

@@ -10,6 +10,9 @@ namespace graphics {
         VertexArray(std::unique_ptr<VertexBuffer> vbo, std::unique_ptr<IndexBuffer> ibo);
         ~VertexArray();
 
+        VertexArray(const VertexArray& other) = delete;
+        VertexArray& operator=(const VertexArray& other) = delete;
+
         void Bind() const;
         uint32_t GetIndexLength() { return m_ibo->GetCount(); };
 

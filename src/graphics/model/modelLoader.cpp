@@ -133,30 +133,10 @@ namespace graphics::modelLoader {
             std::vector<float> vertices(vertexAttribsLength / sizeof(float));
             file.read(reinterpret_cast<char*>(vertices.data()), vertexAttribsLength);
 
-#ifdef DEBUG
-            for (size_t i = 0; i < vertices.size(); i += 8) {
-                LOG_TRACE(
-                    "vertex {}: position: {}, {}, {} | normals {}, {}, {} | \
-textureCoordinates {}, {}",
-                    i / 8,
-                    vertices[i + 0], vertices[i + 1], vertices[i + 2],
-                    vertices[i + 3], vertices[i + 4], vertices[i + 5],
-                    vertices[i + 6], vertices[i + 7]);
-            }
-#endif /* DEBUG */
-
             uint32_t indicesLength;
             file.read(reinterpret_cast<char*>(&indicesLength), sizeof(indicesLength));
             std::vector<uint32_t> indices(indicesLength / sizeof(uint32_t));
             file.read(reinterpret_cast<char*>(indices.data()), indicesLength);
-
-#ifdef DEBUG
-            for (size_t i = 0; i < indices.size(); i += 3) {
-                LOG_TRACE("face {}: {}, {}, {}",
-                          i / 3,
-                          indices[i + 0], indices[i + 1], indices[i + 2]);
-            }
-#endif /* DEBUG */
 
             std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
 

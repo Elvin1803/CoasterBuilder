@@ -7,9 +7,6 @@ namespace scene {
 
     class ModelManager {
     public:
-        ModelManager() = default;
-        ~ModelManager() = default;
-
         std::shared_ptr<graphics::Model> GetModel(std::string name);
 
     private:

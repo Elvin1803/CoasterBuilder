@@ -16,7 +16,6 @@ namespace graphics {
 
     public:
         Model();
-        ~Model() = default;
 
         void AddNode(std::string& name, std::string& parentName, ModelNode& node);
         std::vector<ModelNode> GetNodes() { return m_modelNodes; };

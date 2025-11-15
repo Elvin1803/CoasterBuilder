@@ -14,9 +14,6 @@ namespace graphics {
         };
 
     public:
-        Mesh() = default;
-        ~Mesh() = default;
-
         void AddSubMesh(std::shared_ptr<VertexArray> vao);
         void AddSubMesh(std::shared_ptr<VertexArray> vao, std::shared_ptr<Material> material);
         std::vector<SubMesh> GetSubMesh() { return m_submeshes; };

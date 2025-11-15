@@ -20,7 +20,6 @@ namespace graphics {
     class BufferLayout {
     public:
         BufferLayout(std::vector<BufferLayoutElement> layout);
-        ~BufferLayout() = default;
 
         inline const std::vector<BufferLayoutElement>& GetLayout() const { return m_layout; }
         inline const uint32_t& GetStride() const { return m_stride; }

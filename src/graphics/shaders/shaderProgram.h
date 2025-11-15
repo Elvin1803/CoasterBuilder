@@ -6,7 +6,10 @@ namespace graphics {
     class ShaderProgram {
     public:
         ShaderProgram(const char* vertexCode, const char* fragmentCode);
-        virtual ~ShaderProgram();
+        ~ShaderProgram();
+
+        ShaderProgram(const ShaderProgram& other) = delete;
+        ShaderProgram& operator=(const ShaderProgram& other) = delete;
 
         inline uint32_t GetID() const { return m_shaderProgramID; };
 

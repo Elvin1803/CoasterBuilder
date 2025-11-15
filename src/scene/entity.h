@@ -13,7 +13,6 @@ namespace scene {
     public:
         Entity(graphics::ModelInstance model)
             : m_model(model) {};
-        virtual ~Entity() = default;
 
         virtual void Update(float timestep) = 0;
 
