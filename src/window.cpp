@@ -9,13 +9,14 @@ void GLFWErrorCallback(int error, const char* description) {
 
 Window::Window(const uint16_t width, const uint16_t height, const std::string &title)
     : m_width(width), m_height(height) {
+    glfwSetErrorCallback(GLFWErrorCallback);
+
     LOG_INFO("Initializing GLFW");
     if (!glfwInit()) {
         LOG_ERROR("Failed to initialize GLFW");
         exit(1);
     }
 
-    glfwSetErrorCallback(GLFWErrorCallback);
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
