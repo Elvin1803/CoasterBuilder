@@ -10,13 +10,18 @@
 #include "scene/scene.h"
 #endif // DEBUG
 
+// FIXME: Maybe don't use a macro for this, idk
+#define UPDATE_MS_TICK (10)
+
 int main() {
 #ifdef RELEASE
     auto logPath = utils::GetUserDataPath() + "CoasterBuilder.log";
     LOG_CHANGE_OUTPUT(logPath);
 #endif
 
-    LOG_TRACE("Starting CoasterBuilder");
+    LOG_TRACE("===============================");
+    LOG_TRACE("=== Starting CoasterBuilder ===");
+    LOG_TRACE("===============================");
     Window window(1280, 720, "CoasterBuilder"); // TODO load config for size
     Renderer renderer(&window);
 
@@ -27,10 +32,22 @@ int main() {
     scene::Scene scene;
 #endif // DEBUG
 
+    auto currentTime = std::chrono::high_resolution_clock::now();
+    auto lastTime = std::chrono::high_resolution_clock::now();
+    float lag = 0;
     while (!window.ShouldClose()) {
+        currentTime = std::chrono::high_resolution_clock::now();
+        float timestep_ms = std::chrono::duration<float, std::milli>(currentTime - lastTime).count();
+        lastTime = currentTime;
+        lag += timestep_ms;
+        LOG_TRACE("FPS: {}", 1000.0f / timestep_ms);
+
         window.PollEvents();
 
-        scene.Update(0); // FIXME
+        while (lag >= UPDATE_MS_TICK) {
+            scene.Update(UPDATE_MS_TICK);
+            lag -= UPDATE_MS_TICK;
+        }
 
         // Rendering
         renderer.BeginFrame();

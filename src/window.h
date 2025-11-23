@@ -14,8 +14,8 @@ public:
     void SwapBuffers() const;
 
 public:
-    const uint16_t GetWidth() const { return m_width; }
-    const uint16_t GetHeight() const { return m_height; }
+    uint16_t GetWidth() const { return m_width; }
+    uint16_t GetHeight() const { return m_height; }
 
 private:
     uint16_t m_width, m_height;

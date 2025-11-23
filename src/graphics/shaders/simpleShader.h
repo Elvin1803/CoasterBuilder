@@ -32,11 +32,11 @@ namespace graphics {
             m_textureKdLoc = glGetUniformLocation(m_shaderProgramID, "u_textureKd");
         }
 
-        const void setMVP(const glm::mat4 mvp) const {
+        void setMVP(const glm::mat4 mvp) const {
             glUniformMatrix4fv(m_mvpLoc, 1, GL_FALSE, glm::value_ptr(mvp));
         }
 
-        const void setMaterial(const Material* mat) const {
+        void setMaterial(const Material* mat) const {
             glUniform3f(m_matKaLoc, mat->ambiantColor.x, mat->ambiantColor.y, mat->ambiantColor.z);
             glUniform3f(m_matKdLoc, mat->diffuseColor.x, mat->diffuseColor.y, mat->diffuseColor.z);
             glUniform3f(m_matKsLoc, mat->specularColor.x, mat->specularColor.y, mat->specularColor.z);

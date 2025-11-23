@@ -43,6 +43,12 @@ target_compile_definitions(CoasterBuilder PRIVATE
     $<$<CONFIG:Release>:RELEASE>
 )
 
+if(MSVC)
+  target_compile_options(CoasterBuilder PRIVATE /W4 /WX)
+else()
+  target_compile_options(CoasterBuilder PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
 if (WIN32)
     target_link_libraries(CoasterBuilder PRIVATE opengl32)
 

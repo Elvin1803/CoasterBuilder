@@ -1,3 +1,5 @@
+#ifdef DEBUG
+
 #include <pch.h>
 #include "texture_scene.h"
 #include "graphics/model/modelInstance.h"
@@ -13,3 +15,6 @@ namespace scene {
     }
 
 }
+
+
+#endif //DEBUG

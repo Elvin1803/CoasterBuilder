@@ -33,12 +33,12 @@ void Renderer::Render(scene::Scene& scene) {
         const auto& modelNodes =  modelInstance.m_model->GetNodes();
         const auto& instanceNodes =  modelInstance.m_instanceNodes;
 
-        for (auto i = 0; i < modelNodes.size(); i++) {
+        for (size_t i = 0; i < modelNodes.size(); i++) {
             const auto& modelNode = modelNodes[i];
             const auto& instanceNode = instanceNodes[i];
 
             // FIXME: Calculate modelMatrix here
-            auto mvp = viewProj * instanceNodes[i].modelMatrix;
+            auto mvp = viewProj * instanceNode.modelMatrix;
             shader.setMVP(mvp);
 
             for (auto& submesh : modelNode.mesh->GetSubMesh()) {

@@ -4,7 +4,7 @@
 #ifdef _WIN32
 #include <windows.h>
 #include <shlobj.h>
-#pragma comment(lib, "shell32.lib")
+//#pragma comment(lib, "shell32.lib")
 std::string utils::GetUserDataPath() {
     char path[MAX_PATH];
     if (SUCCEEDED(SHGetFolderPathA(nullptr, CSIDL_LOCAL_APPDATA, nullptr, 0, path))) {
