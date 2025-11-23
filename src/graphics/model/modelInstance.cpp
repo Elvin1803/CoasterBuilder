@@ -5,7 +5,7 @@ namespace graphics {
 
     ModelInstance::ModelInstance(std::shared_ptr<graphics::Model> model)
         : m_model(model) {
-        for (auto& _ : model->m_modelNodes) {
+        for (size_t i = 0; i < model->m_modelNodes.size(); i++) {
             m_instanceNodes.emplace_back();
         }
     }
