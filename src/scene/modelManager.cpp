@@ -1,7 +1,7 @@
 #include <pch.h>
 #include "modelManager.h"
 
-#include "graphics/model/modelLoader.h"
+#include "graphics/3d/modelLoader.h"
 
 namespace scene {
 

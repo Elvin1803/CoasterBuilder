@@ -1,8 +1,8 @@
 #ifndef SIMPLE_SHADER_H
 #define SIMPLE_SHADER_H
 
-#include "shaderProgram.h"
-#include "graphics/model/material.h"
+#include "graphics/graphicsAPI/shaders/shaderProgram.h"
+#include "graphics/graphicsAPI/shaders/material.h"
 
 namespace graphics {
 

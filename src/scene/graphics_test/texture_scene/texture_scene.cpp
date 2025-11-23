@@ -2,7 +2,7 @@
 
 #include <pch.h>
 #include "texture_scene.h"
-#include "graphics/model/modelInstance.h"
+#include "graphics/3d/modelInstance.h"
 #include "texture_plane.h"
 
 namespace scene {

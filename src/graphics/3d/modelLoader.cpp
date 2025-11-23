@@ -1,7 +1,7 @@
 #include <pch.h>
 #include "modelLoader.h"
 
-#include "graphics/buffers/buffer.h"
+#include "graphics/graphicsAPI/buffers/buffer.h"
 
 #include "utils/logger.h"
 

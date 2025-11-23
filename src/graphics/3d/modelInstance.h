@@ -1,7 +1,7 @@
 #ifndef MODEL_INSTANCE_H
 #define MODEL_INSTANCE_H
 
-#include "graphics/model/model.h"
+#include "graphics/3d/model.h"
 
 class Renderer;
 

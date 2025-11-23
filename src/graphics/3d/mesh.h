@@ -1,8 +1,8 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include "graphics/buffers/vertexArray.h"
-#include "material.h"
+#include "graphics/graphicsAPI/buffers/vertexArray.h"
+#include "graphics/graphicsAPI/shaders/material.h"
 
 namespace graphics {
 

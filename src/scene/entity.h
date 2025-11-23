@@ -1,7 +1,7 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include "graphics/model/modelInstance.h"
+#include "graphics/3d/modelInstance.h"
 
 class Renderer;
 

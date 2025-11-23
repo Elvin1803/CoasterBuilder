@@ -1,8 +1,8 @@
 #ifdef DEBUG
 
 #include <pch.h>
+#include "graphics/3d/modelInstance.h"
 #include "gyroscope_scene.h"
-#include "graphics/model/modelInstance.h"
 #include "gyroscope.h"
 
 namespace scene {

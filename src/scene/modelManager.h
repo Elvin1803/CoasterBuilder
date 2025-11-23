@@ -1,7 +1,7 @@
 #ifndef MODEL_MANAGER_H
 #define MODEL_MANAGER_H
 
-#include "graphics/model/model.h"
+#include "graphics/3d/model.h"
 
 namespace scene {
 
