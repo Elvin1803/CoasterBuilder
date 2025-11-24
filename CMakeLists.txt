@@ -22,6 +22,8 @@ target_precompile_headers(CoasterBuilder PRIVATE src/pch.h)
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_WAYLAND OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_X11 ON CACHE BOOL "" FORCE)
+set(GLFW_USE_HYBRID_HPG ON CACHE BOOL "" FORCE)
+
 add_subdirectory(libs/glfw)
 target_link_libraries(CoasterBuilder PRIVATE glfw)
 
