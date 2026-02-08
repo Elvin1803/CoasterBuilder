@@ -14,6 +14,7 @@ add_executable(CoasterBuilder ${SOURCES})
 
 target_include_directories(CoasterBuilder PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/libs/imgui
     )
 
 target_precompile_headers(CoasterBuilder PRIVATE src/pch.h)
@@ -34,6 +35,18 @@ target_link_libraries(CoasterBuilder PRIVATE glad)
 # Link with GLM
 add_subdirectory(libs/glm)
 target_link_libraries(CoasterBuilder PRIVATE glm)
+
+# Compile IMGUI and link with it
+file(GLOB IMGUI_SOURCES "libs/imgui/imgui*.cpp"
+                        "libs/imgui/imgui*.h"
+                        "libs/imgui/backends/imgui_impl_glfw.cpp"
+                        "libs/imgui/backends/imgui_impl_glfw.h"
+                        "libs/imgui/backends/imgui_impl_opengl3.cpp"
+                        "libs/imgui/backends/imgui_impl_opengl3.h")
+add_library(imgui_lib STATIC ${IMGUI_SOURCES})
+target_include_directories(imgui_lib PRIVATE libs/imgui)
+target_link_libraries(imgui_lib PRIVATE glfw)
+target_link_libraries(CoasterBuilder PRIVATE imgui_lib)
 
 # Define DEBUG symbol for Debug builds
 target_compile_definitions(CoasterBuilder PRIVATE

@@ -3,6 +3,10 @@
 #include "utils/paths.h"
 #include "window.h"
 
+#include "imgui.h"
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
+
 #ifdef DEBUG
 #include "scene/graphics_test/gyroscope_scene/gyroscope_scene.h"
 #include "scene/graphics_test/texture_scene/texture_scene.h"
@@ -25,6 +29,18 @@ int main() {
     Window window(1280, 720, "CoasterBuilder"); // TODO load config for size
     Renderer renderer(&window);
 
+    // IMGUI things
+    {
+        // Setup Dear ImGui context
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGuiIO& io = ImGui::GetIO();
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+        // Setup Platform/Renderer backends
+        ImGui_ImplGlfw_InitForOpenGL(window.GetWindow(), true);
+        ImGui_ImplOpenGL3_Init();
+    }
+
 #ifdef DEBUG
     //scene::GyroscopeScene scene;
     scene::TextureScene scene;
@@ -36,6 +52,11 @@ int main() {
     auto lastTime = std::chrono::high_resolution_clock::now();
     float lag = 0;
     while (!window.ShouldClose()) {
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+        ImGui::ShowDemoWindow(); // Show demo window! :)
+
         currentTime = std::chrono::high_resolution_clock::now();
         float timestep_ms = std::chrono::duration<float, std::milli>(currentTime - lastTime).count();
         lastTime = currentTime;
@@ -54,8 +75,15 @@ int main() {
         renderer.Render(scene);
         renderer.EndFrame();
 
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
         window.SwapBuffers();
     }
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 
     LOG_TRACE("Exiting CoasterBuilder");
     return 0;

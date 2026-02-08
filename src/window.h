@@ -16,6 +16,7 @@ public:
 public:
     uint16_t GetWidth() const { return m_width; }
     uint16_t GetHeight() const { return m_height; }
+    GLFWwindow* GetWindow() const { return m_window; }
 
 private:
     uint16_t m_width, m_height;
