@@ -1,11 +1,9 @@
+#include "app.h"
 #include "graphics/renderer.h"
+#include "graphics/2d/ui_manager.h"
 #include "utils/logger.h"
 #include "utils/paths.h"
 #include "window.h"
-
-#include "imgui.h"
-#include "backends/imgui_impl_glfw.h"
-#include "backends/imgui_impl_opengl3.h"
 
 #ifdef DEBUG
 #include "scene/graphics_test/gyroscope_scene/gyroscope_scene.h"
@@ -29,17 +27,7 @@ int main() {
     Window window(1280, 720, "CoasterBuilder"); // TODO load config for size
     Renderer renderer(&window);
 
-    // IMGUI things
-    {
-        // Setup Dear ImGui context
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        ImGuiIO& io = ImGui::GetIO();
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-        // Setup Platform/Renderer backends
-        ImGui_ImplGlfw_InitForOpenGL(window.GetWindow(), true);
-        ImGui_ImplOpenGL3_Init();
-    }
+    UI::UI_manager ui(window.GetWindow());
 
 #ifdef DEBUG
     //scene::GyroscopeScene scene;
@@ -52,16 +40,14 @@ int main() {
     auto lastTime = std::chrono::high_resolution_clock::now();
     float lag = 0;
     while (!window.ShouldClose()) {
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-        ImGui::ShowDemoWindow(); // Show demo window! :)
+        ui.Render();
 
         currentTime = std::chrono::high_resolution_clock::now();
         float timestep_ms = std::chrono::duration<float, std::milli>(currentTime - lastTime).count();
         lastTime = currentTime;
         lag += timestep_ms;
-        LOG_TRACE("FPS: {}", 1000.0f / timestep_ms);
+
+        app::app_state::GetAppState().SetFPS(1000.0f / timestep_ms);
 
         window.PollEvents();
 
@@ -80,10 +66,6 @@ int main() {
 
         window.SwapBuffers();
     }
-
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
 
     LOG_TRACE("Exiting CoasterBuilder");
     return 0;

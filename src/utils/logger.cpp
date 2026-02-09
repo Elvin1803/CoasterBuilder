@@ -5,7 +5,7 @@ namespace utils {
 
     logger* logger::m_instance = nullptr;
 
-    logger::logger(){
+    logger::logger() {
         m_outputFile = &std::cout;
     }
 
