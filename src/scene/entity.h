@@ -11,12 +11,13 @@ namespace scene {
         friend class ::Renderer;
 
     public:
-        Entity(graphics::ModelInstance model)
-            : m_model(model) {};
+        Entity() {};
+        Entity(std::unique_ptr<graphics::ModelInstance> model)
+            : m_model(std::move(model)) {};
 
         virtual void Update(float timestep) = 0;
 
-        graphics::ModelInstance GetModel() { return m_model; };
+        graphics::ModelInstance GetModel() { return *m_model; };
 
         void SetPosition(glm::vec3& newPos) {
             m_position = newPos;
@@ -34,7 +35,7 @@ namespace scene {
         };
 
     protected:
-        graphics::ModelInstance m_model;
+        std::unique_ptr<graphics::ModelInstance> m_model = nullptr;
 
         glm::vec3 m_position = glm::vec3(0.0f);
         glm::vec3 m_rotation = glm::vec3(0.0f);
