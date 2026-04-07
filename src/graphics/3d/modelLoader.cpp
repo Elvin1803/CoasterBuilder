@@ -162,4 +162,79 @@ namespace graphics::modelLoader {
         return model;
     }
 
+    std::unique_ptr<graphics::Mesh> LoadMesh(const std::string& filename) {
+        std::ifstream file(filename, std::ios::binary);
+        if (!file) {
+            LOG_ERROR("Could not open file {}", filename);
+            return nullptr;
+        }
+
+        // Parse materials:
+        std::shared_ptr<Material> material = std::make_shared<Material>();
+
+        glm::vec3 ambiantColor;
+        file.read(reinterpret_cast<char*>(&ambiantColor), sizeof(glm::vec3));
+        material->ambiantColor = ambiantColor;
+
+        glm::vec3 diffuseColor;
+        file.read(reinterpret_cast<char*>(&diffuseColor), sizeof(glm::vec3));
+        material->diffuseColor = diffuseColor;
+
+        glm::vec3 specularColor;
+        file.read(reinterpret_cast<char*>(&specularColor), sizeof(glm::vec3));
+        material->specularColor = specularColor;
+
+        float specularExponent;
+        file.read(reinterpret_cast<char*>(&specularExponent), sizeof(specularExponent));
+        material->specularExponent = specularExponent;
+
+        glm::vec3 emissiveColor;
+        file.read(reinterpret_cast<char*>(&emissiveColor), sizeof(glm::vec3));
+        material->emissiveColor = emissiveColor;
+
+        float dissolve;
+        file.read(reinterpret_cast<char*>(&dissolve), sizeof(dissolve));
+        material->dissolve = dissolve;
+
+        float opticalDensity;
+        file.read(reinterpret_cast<char*>(&opticalDensity), sizeof(opticalDensity));
+        material->opticalDensity = opticalDensity;
+
+        uint32_t KdWidth;
+        file.read(reinterpret_cast<char*>(&KdWidth), sizeof(KdWidth));
+        if (KdWidth != 0) {
+            uint32_t KdHeight;
+            file.read(reinterpret_cast<char*>(&KdHeight), sizeof(KdHeight));
+
+            std::vector<char> textureKd(KdWidth * KdHeight * 4);
+            file.read(reinterpret_cast<char*>(textureKd.data()), KdWidth * KdHeight * 4);
+
+            material->textureKd = std::make_unique<Texture>(KdWidth, KdHeight, textureKd.data());
+        }
+
+        // Parse meshes
+        uint32_t vertexAttribsLength;
+        file.read(reinterpret_cast<char*>(&vertexAttribsLength), sizeof(vertexAttribsLength));
+        std::vector<float> vertices(vertexAttribsLength / sizeof(float));
+        file.read(reinterpret_cast<char*>(vertices.data()), vertexAttribsLength);
+
+        uint32_t indicesLength;
+        file.read(reinterpret_cast<char*>(&indicesLength), sizeof(indicesLength));
+        std::vector<uint32_t> indices(indicesLength / sizeof(uint32_t));
+        file.read(reinterpret_cast<char*>(indices.data()), indicesLength);
+
+        std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
+
+        std::unique_ptr<VertexBuffer> vbo =
+            std::make_unique<VertexBuffer>(vertices.data(), vertices.size() * sizeof(float), layout);
+        std::unique_ptr<IndexBuffer> ibo =
+            std::make_unique<IndexBuffer>(indices.data(), indices.size() * sizeof(uint32_t));
+        const std::shared_ptr<VertexArray> vao =
+            std::make_shared<VertexArray>(std::move(vbo), std::move(ibo));
+
+        mesh->AddSubMesh(vao, material);
+
+        return mesh;
+    }
+
 }

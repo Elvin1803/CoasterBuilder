@@ -9,7 +9,7 @@ namespace scene {
 
     TextureScene::TextureScene() {
         m_camera.SetPosition(glm::vec3(0,0,3));
-        auto model = m_modelManager.GetModel("texture_test.cbdat");
+        auto model = m_modelManager.GetModel("texture_test.cbmodel");
         graphics::ModelInstance modelInstance(model);
         m_entities.emplace_back(std::make_unique<TexturePlane>(modelInstance));
     }

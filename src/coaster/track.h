@@ -10,8 +10,6 @@ public:
     Track();
     ~Track();
 
-    graphics::Model GetModel() {return m_model; };
-
     // Will push a new section after the currentSection, and set the
     // current section to the new one.
     void PushSection();

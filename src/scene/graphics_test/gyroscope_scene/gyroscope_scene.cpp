@@ -8,7 +8,7 @@
 namespace scene {
 
     GyroscopeScene::GyroscopeScene() {
-        auto model = m_modelManager.GetModel("gyroscope.cbdat");
+        auto model = m_modelManager.GetModel("gyroscope.cbmodel");
         graphics::ModelInstance modelInstance(model);
         m_entities.emplace_back(std::make_unique<Gyroscope>(modelInstance));
     }

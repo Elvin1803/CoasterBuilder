@@ -30,8 +30,8 @@ int main() {
     UI::UI_manager ui(window.GetWindow());
 
 #ifdef DEBUG
-    //scene::GyroscopeScene scene;
-    scene::TextureScene scene;
+    scene::GyroscopeScene scene;
+    //scene::TextureScene scene;
 #else
     scene::Scene scene;
 #endif // DEBUG

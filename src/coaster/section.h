@@ -1,7 +1,10 @@
 #ifndef _SECTION_H_
 #define _SECTION_H_
 
+#include "glm/ext/matrix_transform.hpp"
+#include "glm/fwd.hpp"
 #include "graphics/3d/mesh.h"
+#include <vector>
 
 enum class SectionType { Basic, Station, Lift, Brake };
 
@@ -33,22 +36,28 @@ struct CurveData {
 struct TrackNode {
     // Editable
     glm::vec3 position = glm::vec3(0.f, 0.f, 0.f); // world space
-    // local direction
-    glm::vec3 forward = glm::vec3(0.f, 0.f, 0.f);
-    glm::vec3 up = glm::vec3(0.f, 0.f, 0.f);
+    // To calculate direction
+    glm::vec3 direction = glm::vec3(1.f, 0.f, 0.f);
+    glm::vec3 up = glm::vec3(0.f, 1.f, 0.f);
 
     std::optional<float> heartline = std::nullopt; // Take coaster heartline by default
+};
+
+struct TrackModel {
+    graphics::Mesh rail;
+    graphics::Mesh crosstie;
+    std::vector<glm::mat4> crosstiesTransforms;
 };
 
 class Section
 {
 public:
-    Section();
-    ~Section();
+    Section() = default;
+    ~Section() = default;
 
     virtual void CalculateNodes(ForceData data);
     virtual void CalculateNodes(DirectionData data);
-    virtual void CalculateNodes(CurveData data);
+    void CalculateNodes(CurveData data);
 
     std::unique_ptr<Section>* prevSection = nullptr;
     std::unique_ptr<Section>* nextSection = nullptr;
@@ -58,7 +67,7 @@ private:
 
 private:
     std::vector<TrackNode> m_nodes;
-    std::shared_ptr<graphics::Mesh> m_mesh;
+    TrackModel m_model;
 };
 
 

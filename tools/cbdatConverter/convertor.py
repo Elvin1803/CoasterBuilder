@@ -146,7 +146,7 @@ def parse_model(file):
                         meshes[-1].indices.append(len(meshes[-1].vertexAttribs) - 1)
 
 
-def writeToFile(outputFile):
+def writeModelToFile(outputFile):
     content = b''
     # Materials
     # Start by writing the number of materials to parse
@@ -162,7 +162,8 @@ def writeToFile(outputFile):
         # nameLen > name
         # ambiant color (3 floats)
         # diffuse color (3 floats)
-        # specular (1 float)
+        # specular color (3 float)
+        # specular exponent (1 float)
         # emissive color (3 floats)
         # dissolve (1 float)
         # optical density (1 float)
@@ -231,13 +232,68 @@ def writeToFile(outputFile):
         f.write(content)
 
 
+def writeMeshToFile(outputFile):
+    content = b''
+    # Materials
+    def pack_list(lst, count=3):
+        if lst:
+            return struct.pack(f'{count}f', *lst)
+        return struct.pack(f'{count}f', *([0.0] * count))
+
+    # ambiant color (3 floats)
+    # diffuse color (3 floats)
+    # specular color (3 float)
+    # specular exponent (1 float)
+    # emissive color (3 floats)
+    # dissolve (1 float)
+    # optical density (1 float)
+    # width, height, textureKd (one pixel = 4 bytes RGBA) (if width == 0 there is no image)
+    content += pack_list(m.ambiantColor)
+    content += pack_list(m.diffuseColor)
+    content += pack_list(m.specular)
+    content += struct.pack('f', m.specularExponent)
+    content += pack_list(m.emissiveColor)
+    content += struct.pack('f', m.dissolve)
+    content += struct.pack('f', m.opticalDensity)
+    # textureKd
+    if m.textureKd:
+        content += struct.pack('i', m.textureKd.width)
+        content += struct.pack('i', m.textureKd.height)
+        content += m.textureKd.data
+    else:
+        content += struct.pack('i', 0)
+
+    # Mesh
+    # vertexAttributeLen > vertexAttributes (3 floats pos, 3 floats normals, 2 floats UV)
+    # indicesLen > indices
+
+    # vertexAttributes
+    content += struct.pack('i', len(o.vertexAttribs) * len(o.vertexAttribs[0]) * 4)
+    for vertAttr in o.vertexAttribs:
+        content += b''.join(struct.pack('f', float(f)) for f in vertAttr)
+    # indices
+    content += struct.pack('i', len(o.indices) * 4)
+    content += b''.join(struct.pack('i', int(i)) for i in o.indices)
+
+    with open(outputFile, "ab") as f:
+        f.write(content)
+
+
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print("Usage: python convertor.py <file.obj> <output>")
+        print("Usage: python convertor.py <file.obj> <output.(cbmodel|cbmesh)>")
         exit(1)
 
     inputFile = sys.argv[1]
     outputFile = sys.argv[2]
     workingDir = os.path.dirname(inputFile)
+
     parse_model(inputFile)
-    writeToFile(outputFile)
+
+    if (outputFile.split('.')[-1] == "cbmodel"):
+        print("Generating model")
+        writeModelToFile(outputFile)
+    else:
+        print("Generating mesh")
+        writeMeshToFile(outputFile)
+
