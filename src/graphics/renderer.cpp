@@ -21,12 +21,12 @@ void Renderer::EndFrame() {
 void Renderer::Render(scene::Scene& scene) {
     // FIXME: Shaders should be in materials
     graphics::SimpleShader shader;
-    shader.UseShader();
 
     auto& cam = scene.GetCamera();
     auto& viewProj = cam.GetViewProjection();
 
     // FIXME: Pas opti
+    shader.UseShader();
     for (auto& entity : scene.GetEntities()) {
         auto modelInstance = entity->GetModel();
         modelInstance.RecalculateTransforms();
@@ -37,7 +37,6 @@ void Renderer::Render(scene::Scene& scene) {
             const auto& modelNode = modelNodes[i];
             const auto& instanceNode = instanceNodes[i];
 
-            // FIXME: Calculate modelMatrix here
             auto mvp = viewProj * instanceNode.modelMatrix;
             shader.setMVP(mvp);
 
@@ -49,4 +48,8 @@ void Renderer::Render(scene::Scene& scene) {
         }
     }
 
+    // Render tracks
+    for (auto& track : scene.GetTracks()) {
+        track.Render(viewProj);
+    }
 }

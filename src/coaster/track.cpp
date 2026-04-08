@@ -2,6 +2,7 @@
 #include <pch.h>
 
 #include "stationSection.h"
+#include "graphics/3d/modelLoader.h"
 
 Track::Track() {
     // Add station section
@@ -15,7 +16,22 @@ Track::Track() {
     PushSection();
 }
 
+void Track::SetTrackModel(const std::string& filename) {
+    m_trackModel = graphics::modelLoader::LoadTrack(filename);
+
+    for (auto& section : m_sections) {
+        section->SetTrackModel(*m_trackModel);
+    }
+}
+
+void Track::Render(const glm::mat4& mvp) {
+    for (auto& section : m_sections) {
+        section->Render(mvp);
+    }
+}
+
 void Track::PushSection() {
+    // FIXME
     auto* newSection = &m_sections.emplace_back(std::make_unique<Section>());
     m_currentSection->get()->nextSection = newSection;
     newSection->get()->prevSection = m_currentSection;

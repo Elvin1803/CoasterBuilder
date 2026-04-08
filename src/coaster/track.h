@@ -3,12 +3,14 @@
 
 #include "section.h"
 
-#include "graphics/3d/model.h"
+#include "graphics/3d/mesh.h"
 
 class Track {
 public:
     Track();
-    ~Track();
+
+    void SetTrackModel(const std::string& filename);
+    void Render(const glm::mat4& mvp);
 
     // Will push a new section after the currentSection, and set the
     // current section to the new one.
@@ -26,7 +28,7 @@ private:
     std::list<std::unique_ptr<Section>> m_sections; // 1 section = 1 mesh
     std::unique_ptr<Section>* m_currentSection = nullptr; // Section that is being edited
 
-    graphics::Model m_model;
+    std::unique_ptr<graphics::Mesh> m_trackModel;
 };
 
 

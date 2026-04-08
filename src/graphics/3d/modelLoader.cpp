@@ -162,7 +162,7 @@ namespace graphics::modelLoader {
         return model;
     }
 
-    std::unique_ptr<graphics::Mesh> LoadMesh(const std::string& filename) {
+    std::unique_ptr<graphics::Mesh> LoadTrack(const std::string& filename) {
         std::ifstream file(filename, std::ios::binary);
         if (!file) {
             LOG_ERROR("Could not open file {}", filename);

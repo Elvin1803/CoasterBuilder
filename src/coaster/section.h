@@ -40,7 +40,7 @@ struct TrackNode {
     glm::vec3 direction = glm::vec3(1.f, 0.f, 0.f);
     glm::vec3 up = glm::vec3(0.f, 1.f, 0.f);
 
-    std::optional<float> heartline = std::nullopt; // Take coaster heartline by default
+    float heartline = 0.f;
 };
 
 struct TrackModel {
@@ -54,6 +54,9 @@ class Section
 public:
     Section() = default;
     ~Section() = default;
+
+    void SetTrackModel(graphics::Mesh mesh);
+    void Render(const glm::mat4& mvp);
 
     virtual void CalculateNodes(ForceData data);
     virtual void CalculateNodes(DirectionData data);

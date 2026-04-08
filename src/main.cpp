@@ -8,6 +8,7 @@
 #ifdef DEBUG
 #include "scene/graphics_test/gyroscope_scene/gyroscope_scene.h"
 #include "scene/graphics_test/texture_scene/texture_scene.h"
+#include "scene/coaster_test/coaster_scene.h"
 #else
 #include "scene/scene.h"
 #endif // DEBUG
@@ -30,8 +31,9 @@ int main() {
     UI::UI_manager ui(window.GetWindow());
 
 #ifdef DEBUG
-    scene::GyroscopeScene scene;
+    //scene::GyroscopeScene scene;
     //scene::TextureScene scene;
+    scene::CoasterScene scene;
 #else
     scene::Scene scene;
 #endif // DEBUG

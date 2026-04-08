@@ -7,7 +7,7 @@ namespace graphics::modelLoader {
 
     std::shared_ptr<graphics::Model> LoadModel(const std::string& filename);
 
-    std::unique_ptr<graphics::Mesh> LoadMesh(const std::string& filename);
+    std::unique_ptr<graphics::Mesh> LoadTrack(const std::string& filename);
 
 }
 

@@ -232,14 +232,15 @@ def writeModelToFile(outputFile):
         f.write(content)
 
 
-def writeMeshToFile(outputFile):
+def writeTrackToFile(outputFile):
     content = b''
-    # Materials
+    # Material
     def pack_list(lst, count=3):
         if lst:
             return struct.pack(f'{count}f', *lst)
         return struct.pack(f'{count}f', *([0.0] * count))
 
+    m = materials[0]
     # ambiant color (3 floats)
     # diffuse color (3 floats)
     # specular color (3 float)
@@ -263,6 +264,8 @@ def writeMeshToFile(outputFile):
     else:
         content += struct.pack('i', 0)
 
+
+    o = meshes[0]
     # Mesh
     # vertexAttributeLen > vertexAttributes (3 floats pos, 3 floats normals, 2 floats UV)
     # indicesLen > indices
@@ -281,7 +284,7 @@ def writeMeshToFile(outputFile):
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print("Usage: python convertor.py <file.obj> <output.(cbmodel|cbmesh)>")
+        print("Usage: python convertor.py <file.obj> <output.(cbmodel|cbtrack)>")
         exit(1)
 
     inputFile = sys.argv[1]
@@ -293,7 +296,9 @@ if __name__ == "__main__":
     if (outputFile.split('.')[-1] == "cbmodel"):
         print("Generating model")
         writeModelToFile(outputFile)
+    elif (outputFile.split('.')[-1] == "cbtrack"):
+        print("Generating track")
+        writeTrackToFile(outputFile)
     else:
-        print("Generating mesh")
-        writeMeshToFile(outputFile)
+        print("Usage: python convertor.py <file.obj> <output.(cbmodel|cbtrack)>")
 
