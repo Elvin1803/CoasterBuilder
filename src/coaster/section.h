@@ -55,7 +55,7 @@ public:
     Section() = default;
     ~Section() = default;
 
-    void SetTrackModel(graphics::Mesh mesh);
+    void SetTrackModel(const graphics::Mesh& mesh);
     void Render(const glm::mat4& mvp);
 
     virtual void CalculateNodes(ForceData data);

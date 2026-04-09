@@ -53,10 +53,13 @@ int main() {
 
         window.PollEvents();
 
+        scene.Update(UPDATE_MS_TICK);
+        /*
         while (lag >= UPDATE_MS_TICK) {
             scene.Update(UPDATE_MS_TICK);
             lag -= UPDATE_MS_TICK;
         }
+        */
 
         // Rendering
         renderer.BeginFrame();

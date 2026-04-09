@@ -162,11 +162,11 @@ namespace graphics::modelLoader {
         return model;
     }
 
-    std::unique_ptr<graphics::Mesh> LoadTrack(const std::string& filename) {
+    graphics::Mesh LoadTrack(const std::string& filename) {
         std::ifstream file(filename, std::ios::binary);
         if (!file) {
             LOG_ERROR("Could not open file {}", filename);
-            return nullptr;
+            return {};
         }
 
         // Parse materials:
@@ -223,7 +223,7 @@ namespace graphics::modelLoader {
         std::vector<uint32_t> indices(indicesLength / sizeof(uint32_t));
         file.read(reinterpret_cast<char*>(indices.data()), indicesLength);
 
-        std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
+        Mesh mesh;
 
         std::unique_ptr<VertexBuffer> vbo =
             std::make_unique<VertexBuffer>(vertices.data(), vertices.size() * sizeof(float), layout);
@@ -232,7 +232,7 @@ namespace graphics::modelLoader {
         const std::shared_ptr<VertexArray> vao =
             std::make_shared<VertexArray>(std::move(vbo), std::move(ibo));
 
-        mesh->AddSubMesh(vao, material);
+        mesh.AddSubMesh(vao, material);
 
         return mesh;
     }

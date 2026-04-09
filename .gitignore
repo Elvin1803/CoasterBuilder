@@ -2,6 +2,7 @@
 build/*
 
 *.blend
+*.blend1
 *.obj
 *.mtl
 

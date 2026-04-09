@@ -6,7 +6,7 @@
 
 #include "utils/logger.h"
 
-void Section::SetTrackModel(graphics::Mesh mesh) {
+void Section::SetTrackModel(const graphics::Mesh& mesh) {
     m_model.crosstie = mesh;
 
     UpdateModel();
@@ -48,7 +48,6 @@ void Section::CalculateNodes(DirectionData data){
 }
 
 void Section::CalculateNodes(CurveData data) {
-    LOG_TRACE("Calculate nodes");
     // Reset nodes
     m_nodes.clear();
 
@@ -86,9 +85,7 @@ void Section::CalculateNodes(CurveData data) {
         m_nodes.emplace_back(currentPos, currentDirection, currentUp);
     }
 
-    LOG_TRACE("Update model");
     UpdateModel();
-    LOG_TRACE("Update model done");
 }
 
 void Section::UpdateModel() {

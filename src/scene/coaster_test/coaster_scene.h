@@ -14,8 +14,10 @@ namespace scene {
         virtual void Update(float timestep) override;
 
     private:
-        float timer = 0.f;
-        int clock = 1;
+        CurveData data{10, 0, 0, 0};
+
+        glm::vec3 camPos{15, 4, 25};
+        glm::vec3 camRot{0, 0, 0};
     };
 
 }

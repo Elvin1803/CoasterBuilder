@@ -28,7 +28,7 @@ private:
     std::list<std::unique_ptr<Section>> m_sections; // 1 section = 1 mesh
     std::unique_ptr<Section>* m_currentSection = nullptr; // Section that is being edited
 
-    std::unique_ptr<graphics::Mesh> m_trackModel;
+    graphics::Mesh m_trackModel;
 };
 
 

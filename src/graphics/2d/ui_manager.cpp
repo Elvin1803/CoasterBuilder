@@ -29,9 +29,6 @@ namespace UI {
         ImGui::Begin("app state");
         ImGui::Text("FPS: %.3f", app::app_state::GetAppState().GetFPS());
         ImGui::End();
-
-        ImGui::Begin("harcelement");
-        ImGui::End();
     }
 
 }
