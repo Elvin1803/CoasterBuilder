@@ -27,7 +27,7 @@ namespace UI {
         ImGui::NewFrame();
 
         ImGui::Begin("app state");
-        ImGui::Text("FPS: %.3f", app::app_state::GetAppState().GetFPS());
+        //ImGui::Text("FPS: %.3f", app::app_state::GetAppState().GetFPS());
         ImGui::End();
     }
 

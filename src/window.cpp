@@ -1,7 +1,10 @@
+#include <memory>
 #include <pch.h>
 #include "window.h"
 
+#include "app.h"
 #include "utils/logger.h"
+#include "events/events.h"
 
 void GLFWErrorCallback(int error, const char* description) {
     LOG_ERROR("GLFW Error {}: {}", error, description);
@@ -37,6 +40,41 @@ Window::Window(const uint16_t width, const uint16_t height, const std::string &t
         LOG_FATAL("Failed to initialize GLAD !");
         exit(1);
     }
+
+    glfwSetWindowUserPointer(m_window, this);
+
+    glfwSetKeyCallback(m_window, [](GLFWwindow*, int key, int, int action, int) {
+        if (!ImGui::GetIO().WantCaptureKeyboard) {
+            switch (action)
+            {
+            case GLFW_PRESS:
+                app::Application::GetApplication()
+                    .QueueEvent(std::make_unique<Events::Event>(Events::EventType::KeyPress, key));
+                break;
+            case GLFW_RELEASE:
+                app::Application::GetApplication()
+                    .QueueEvent(std::make_unique<Events::Event>(Events::EventType::KeyReleased, key));
+                break;
+            }
+        }
+    });
+
+    glfwSetMouseButtonCallback(m_window, [](GLFWwindow*, int button, int action, int)
+    {
+        if (!ImGui::GetIO().WantCaptureMouse) {
+            switch (action)
+            {
+            case GLFW_PRESS:
+                app::Application::GetApplication()
+                    .QueueEvent(std::make_unique<Events::Event>(Events::EventType::MouseButtonPressed, button));
+                break;
+            case GLFW_RELEASE:
+                app::Application::GetApplication()
+                    .QueueEvent(std::make_unique<Events::Event>(Events::EventType::MouseButtonReleased, button));
+                break;
+            }
+        }
+    });
 
 }
 

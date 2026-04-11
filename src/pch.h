@@ -25,6 +25,8 @@
 #include <iomanip>
 #include <iostream>
 
+#include <queue>
+
 #include <list>
 
 #include <memory>
