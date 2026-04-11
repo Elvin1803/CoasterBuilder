@@ -29,6 +29,7 @@
 
 #include <list>
 
+#include <map>
 #include <memory>
 
 #include <ostream>

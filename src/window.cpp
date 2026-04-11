@@ -1,10 +1,10 @@
-#include <memory>
 #include <pch.h>
 #include "window.h"
 
 #include "app.h"
 #include "utils/logger.h"
-#include "events/events.h"
+#include "input/events.h"
+#include "input/input.h"
 
 void GLFWErrorCallback(int error, const char* description) {
     LOG_ERROR("GLFW Error {}: {}", error, description);
@@ -48,12 +48,10 @@ Window::Window(const uint16_t width, const uint16_t height, const std::string &t
             switch (action)
             {
             case GLFW_PRESS:
-                app::Application::GetApplication()
-                    .QueueEvent(std::make_unique<Events::Event>(Events::EventType::KeyPress, key));
+                Input::RegisterEvent({EventType::KeyPress, key});
                 break;
             case GLFW_RELEASE:
-                app::Application::GetApplication()
-                    .QueueEvent(std::make_unique<Events::Event>(Events::EventType::KeyReleased, key));
+                Input::RegisterEvent({EventType::KeyReleased, key});
                 break;
             }
         }
@@ -65,16 +63,16 @@ Window::Window(const uint16_t width, const uint16_t height, const std::string &t
             switch (action)
             {
             case GLFW_PRESS:
-                app::Application::GetApplication()
-                    .QueueEvent(std::make_unique<Events::Event>(Events::EventType::MouseButtonPressed, button));
+                Input::RegisterEvent({EventType::MouseButtonPressed, button});
                 break;
             case GLFW_RELEASE:
-                app::Application::GetApplication()
-                    .QueueEvent(std::make_unique<Events::Event>(Events::EventType::MouseButtonReleased, button));
+                Input::RegisterEvent({EventType::MouseButtonReleased, button});
                 break;
             }
         }
     });
+
+    // TODO: Handle scroll
 
 }
 

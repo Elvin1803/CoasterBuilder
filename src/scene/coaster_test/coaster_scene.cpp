@@ -1,3 +1,4 @@
+#include "scene/scene.h"
 #ifdef DEBUG
 
 #include <pch.h>
@@ -19,6 +20,8 @@ namespace scene {
     }
 
     void CoasterScene::Update(float timestep) {
+        Scene::Update(timestep);
+
         (void)timestep;
         ImGui::Begin("Track Editor");
 

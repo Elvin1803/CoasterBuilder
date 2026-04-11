@@ -1,6 +1,7 @@
 #include <pch.h>
 #include "app.h"
 
+#include "input/input.h"
 #include "utils/logger.h"
 
 namespace app {
@@ -9,6 +10,13 @@ namespace app {
 
     Application::Application() {
         // TODO: Custom config
+        Input::SetKeybind(InputAction::MOVE_FORWARD,  GLFW_KEY_W);
+        Input::SetKeybind(InputAction::MOVE_LEFT,     GLFW_KEY_A);
+        Input::SetKeybind(InputAction::MOVE_BACKWARD, GLFW_KEY_S);
+        Input::SetKeybind(InputAction::MOVE_RIGHT,    GLFW_KEY_D);
+        Input::SetKeybind(InputAction::MOVE_UP,       GLFW_KEY_SPACE);
+        Input::SetKeybind(InputAction::MOVE_DOWN,     GLFW_KEY_X);
+        Input::SetKeybind(InputAction::MOVE_SPRINT,   GLFW_KEY_LEFT_SHIFT);
     }
 
     Application& Application::GetApplication() {
@@ -54,10 +62,5 @@ namespace app {
 
             m_window.SwapBuffers();
         }
-    }
-
-    void Application::QueueEvent(std::unique_ptr<Events::Event> e) {
-        m_eventQueue.emplace(std::move(e));
-        LOG_TRACE("Inserted event");
     }
 }

@@ -1,7 +1,7 @@
 #ifndef _APP_H_
 #define _APP_H_
 
-#include "events/events.h"
+#include "input/events.h"
 #ifdef DEBUG
 #include "scene/graphics_test/gyroscope_scene/gyroscope_scene.h"
 #include "scene/graphics_test/texture_scene/texture_scene.h"
@@ -24,7 +24,8 @@ namespace app {
         static Application& GetApplication();
 
         void Run();
-        void QueueEvent(std::unique_ptr<Events::Event> e);
+
+        const Window& GetWindow() { return m_window; };
 
     private:
         static Application* m_instance;
@@ -36,8 +37,6 @@ namespace app {
         Window m_window{1280, 720, "CoasterBuilder"};
         Renderer m_renderer{&m_window};
         UI::UI_manager m_uiManager{m_window.GetWindow()};
-
-        std::queue<std::unique_ptr<Events::Event>> m_eventQueue;
 
 #ifdef DEBUG
         //scene::GyroscopeScene m_scene;

@@ -1,11 +1,21 @@
 #include <pch.h>
 #include "camera.h"
 
+#include "utils/logger.h"
+#include "input/input.h"
+
 namespace graphics {
 
     Camera::Camera(const ViewportRect& rect)
         : m_viewport(rect) {
         UpdateProjectionMatrix();
+    }
+
+    void Camera::Update(float timestep) {
+        (void)timestep;
+        if (Input::IsActionPressed(InputAction::MOVE_FORWARD)) {
+            LOG_TRACE("move fwd");
+        }
     }
 
     void Camera::UpdateProjectionMatrix() {

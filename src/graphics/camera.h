@@ -14,6 +14,8 @@ namespace graphics {
     public:
         Camera(const ViewportRect& rect);
 
+        void Update(float timestep);
+
         const glm::mat4 GetViewProjection() const { return m_projectionMatrix * m_viewMatrix; };
 
         glm::vec3 GetPosition() const { return m_position; };
