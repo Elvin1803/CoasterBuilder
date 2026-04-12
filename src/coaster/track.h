@@ -15,6 +15,7 @@ public:
     // Will push a new section after the currentSection, and set the
     // current section to the new one.
     void PushSection();
+    void EraseSection();
     void SetCurrentSection(std::unique_ptr<Section>* section);
 
     void EditSectionType(SectionType type);

@@ -55,6 +55,8 @@ void Section::CalculateNodes(CurveData data) {
     auto numSegments = static_cast<int>(std::ceil(data.length));
     auto stepDist    = data.length / numSegments;
 
+    glm::vec3 worldUp        = glm::vec3(0.f, 1.f, 0.f);
+
     glm::vec3 currentPos       = glm::vec3(0.f, 0.f, 0.f);
     glm::vec3 currentDirection = glm::vec3(1.f, 0.f, 0.f);
     glm::vec3 currentUp        = glm::vec3(0.f, 1.f, 0.f);
@@ -66,14 +68,19 @@ void Section::CalculateNodes(CurveData data) {
     }
 
     auto deltaPitch = glm::radians(data.pitch / numSegments);
-    auto deltaYaw   = glm::radians(data.yaw   / numSegments);
+    auto deltaYaw   = -glm::radians(data.yaw   / numSegments);
     auto deltaRoll  = glm::radians(data.roll  / numSegments);
 
     for (int i = 0; i < numSegments; i++) {
-        // Pitch and yaw
-        auto currentRight = glm::normalize(glm::cross(currentDirection, currentUp));
-        auto rotation     = glm::angleAxis(deltaPitch, currentRight)
-                          * glm::angleAxis(deltaYaw,   currentUp);
+        glm::vec3 currentRight;
+        if (currentDirection == glm::vec3(0.f, 1.f, 0.f)) {
+            currentRight = glm::normalize(glm::cross(currentDirection, worldUp));
+        } else {
+            currentRight = glm::normalize(glm::cross(currentDirection, currentUp));
+        }
+
+        auto rotation     = glm::angleAxis(deltaYaw, worldUp)
+                            * glm::angleAxis(deltaPitch, currentRight);
 
         // Update local vectors
         currentDirection  = glm::normalize(rotation * currentDirection);

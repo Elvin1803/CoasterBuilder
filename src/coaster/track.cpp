@@ -33,11 +33,24 @@ void Track::Render(const glm::mat4& mvp) {
 }
 
 void Track::PushSection() {
-    // FIXME
     auto* newSection = &m_sections.emplace_back(std::make_unique<Section>());
     m_currentSection->get()->nextSection = newSection;
     newSection->get()->prevSection = m_currentSection;
     SetCurrentSection(newSection);
+}
+
+void Track::EraseSection() {
+    if (m_currentSection->get()->prevSection) {
+        m_currentSection->get()->prevSection->get()->nextSection = m_currentSection->get()->nextSection;
+    }
+
+    if (m_currentSection->get()->nextSection) {
+        m_currentSection->get()->nextSection->get()->prevSection = m_currentSection->get()->prevSection;
+    }
+
+    auto temp = m_currentSection->get()->prevSection;
+    m_sections.remove(*m_currentSection);
+    m_currentSection = temp;
 }
 
 void Track::SetCurrentSection(std::unique_ptr<Section>* section) {

@@ -41,6 +41,10 @@ namespace scene {
             m_tracks.front().EditSectionData(data);
         }
 
+        if (ImGui::Button("Remove section", ImVec2(-1, 30))) {
+            m_tracks.front().EraseSection();
+        }
+
         ImGui::End();
     }
 
