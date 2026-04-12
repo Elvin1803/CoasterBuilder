@@ -14,15 +14,12 @@ namespace scene {
         auto& track = m_tracks.emplace_back();
         track.SetTrackModel("arrow.cbtrack");
 
-        m_camera.SetPosition(camPos);
-        m_camera.SetPitchYawRoll(camRot);
         m_tracks.front().EditSectionData(data);
     }
 
     void CoasterScene::Update(float timestep) {
         Scene::Update(timestep);
 
-        (void)timestep;
         ImGui::Begin("Track Editor");
 
         ImGui::Text("Section Parameters");
@@ -40,18 +37,10 @@ namespace scene {
 
         if (ImGui::Button("Push section", ImVec2(-1, 30))) {
             m_tracks.front().PushSection();
+            data.pitch = 0;
             m_tracks.front().EditSectionData(data);
         }
 
-        ImGui::End();
-        ImGui::Begin("Camera Controls");
-        if (ImGui::DragFloat3("Position", (float*)&camPos, 0.1f)) {
-            m_camera.SetPosition(camPos);
-        }
-
-        if (ImGui::DragFloat3("Rotation", (float*)&camRot, 1.0f, -180.0f, 180.0f)) {
-            m_camera.SetPitchYawRoll(camRot);
-        }
         ImGui::End();
     }
 

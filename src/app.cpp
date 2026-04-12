@@ -1,6 +1,7 @@
 #include <pch.h>
 #include "app.h"
 
+#include "GLFW/glfw3.h"
 #include "input/input.h"
 #include "utils/logger.h"
 
@@ -9,6 +10,13 @@ namespace app {
     Application* Application::m_instance = nullptr;
 
     Application::Application() {
+        Input::SetKeybind(InputAction::LEFT_CLICK,   GLFW_MOUSE_BUTTON_LEFT);
+        Input::SetKeybind(InputAction::RIGHT_CLICK,  GLFW_MOUSE_BUTTON_RIGHT);
+        Input::SetKeybind(InputAction::MIDDLE_CLICK, GLFW_MOUSE_BUTTON_MIDDLE);
+        Input::SetKeybind(InputAction::ZOOM_OUT,     GLFW_KEY_LEFT_CONTROL);
+        Input::SetKeybind(InputAction::ZOOM_IN,      GLFW_KEY_LEFT_SHIFT);
+
+
         // TODO: Custom config
         Input::SetKeybind(InputAction::MOVE_FORWARD,  GLFW_KEY_W);
         Input::SetKeybind(InputAction::MOVE_LEFT,     GLFW_KEY_A);

@@ -44,7 +44,7 @@ Window::Window(const uint16_t width, const uint16_t height, const std::string &t
     glfwSetWindowUserPointer(m_window, this);
 
     glfwSetKeyCallback(m_window, [](GLFWwindow*, int key, int, int action, int) {
-        if (!ImGui::GetIO().WantCaptureKeyboard) {
+        if (!ImGui::GetIO().WantTextInput) {
             switch (action)
             {
             case GLFW_PRESS:
