@@ -22,7 +22,7 @@ workingDir = ''
 class mesh:
     def __init__(self, name):
         self.name = name
-        self.vertexAttribs = [] # 3 floats (Position), 3 floats (Normals), 2 floats (TexCoords)
+        self.vertexAttribs = [] # 3 floats (Position), 3 floats (Normals), 2 floats (TexCoords) // for rails, only pos
         self.indices = []
         self.parent = ""
         self.origin = [0, 0, 0]
@@ -145,6 +145,18 @@ def parse_model(file):
                         meshes[-1].vertexAttribs.append(vertices[vtn[0]] + normals[vtn[2]] + texCoords[vtn[1]])
                         meshes[-1].indices.append(len(meshes[-1].vertexAttribs) - 1)
 
+            if prefix == 'l':
+                for point in values:
+                    for i in range(len(vertexAttribList)):
+                        if vertexAttribList[i] == point:
+                            meshes[-1].indices.append(i)
+                            break;
+                    else:
+                        vertexAttribList.append(point)
+                        v_idx = int(point) - 1
+                        meshes[-1].vertexAttribs.append(vertices[v_idx])
+                        meshes[-1].indices.append(len(meshes[-1].vertexAttribs) - 1)
+
 
 def writeModelToFile(outputFile):
     content = b''
@@ -265,7 +277,20 @@ def writeTrackToFile(outputFile):
         content += struct.pack('i', 0)
 
 
-    o = meshes[0]
+    o = next((m for m in meshes if m.name == "crosstie"), None)
+    # Mesh
+    # vertexAttributeLen > vertexAttributes (3 floats pos, 3 floats normals, 2 floats UV)
+    # indicesLen > indices
+
+    # vertexAttributes
+    content += struct.pack('i', len(o.vertexAttribs) * len(o.vertexAttribs[0]) * 4)
+    for vertAttr in o.vertexAttribs:
+        content += b''.join(struct.pack('f', float(f)) for f in vertAttr)
+    # indices
+    content += struct.pack('i', len(o.indices) * 4)
+    content += b''.join(struct.pack('i', int(i)) for i in o.indices)
+
+    o = next((m for m in meshes if m.name == "rails"), None)
     # Mesh
     # vertexAttributeLen > vertexAttributes (3 floats pos, 3 floats normals, 2 floats UV)
     # indicesLen > indices

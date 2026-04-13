@@ -2,6 +2,7 @@
 #define MODEL_H
 
 #include "mesh.h"
+#include <memory>
 
 namespace graphics {
 
@@ -23,6 +24,13 @@ namespace graphics {
     private:
         std::vector<ModelNode> m_modelNodes;
         std::unordered_map<std::string, uint16_t> m_nameToNodeIndex;
+    };
+
+    struct TrackModel {
+        graphics::Mesh crosstie;
+
+        std::vector<float> railProfile;
+        std::vector<uint32_t> railIndices;
     };
 
 }

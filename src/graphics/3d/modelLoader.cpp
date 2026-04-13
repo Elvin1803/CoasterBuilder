@@ -1,8 +1,10 @@
+#include <memory>
 #include <pch.h>
 #include "modelLoader.h"
 
 #include "graphics/graphicsAPI/buffers/buffer.h"
 
+#include "model.h"
 #include "utils/logger.h"
 
 namespace graphics::modelLoader {
@@ -162,7 +164,7 @@ namespace graphics::modelLoader {
         return model;
     }
 
-    graphics::Mesh LoadTrack(const std::string& filename) {
+    graphics::TrackModel LoadTrack(const std::string& filename) {
         std::ifstream file(filename, std::ios::binary);
         if (!file) {
             LOG_ERROR("Could not open file {}", filename);
@@ -212,29 +214,43 @@ namespace graphics::modelLoader {
             material->textureKd = std::make_unique<Texture>(KdWidth, KdHeight, textureKd.data());
         }
 
-        // Parse meshes
-        uint32_t vertexAttribsLength;
-        file.read(reinterpret_cast<char*>(&vertexAttribsLength), sizeof(vertexAttribsLength));
-        std::vector<float> vertices(vertexAttribsLength / sizeof(float));
-        file.read(reinterpret_cast<char*>(vertices.data()), vertexAttribsLength);
+        TrackModel trackModel;
+        // Parse crosstie
+        {
+            uint32_t vertexAttribsLength;
+            file.read(reinterpret_cast<char*>(&vertexAttribsLength), sizeof(vertexAttribsLength));
+            std::vector<float> vertices(vertexAttribsLength / sizeof(float));
+            file.read(reinterpret_cast<char*>(vertices.data()), vertexAttribsLength);
 
-        uint32_t indicesLength;
-        file.read(reinterpret_cast<char*>(&indicesLength), sizeof(indicesLength));
-        std::vector<uint32_t> indices(indicesLength / sizeof(uint32_t));
-        file.read(reinterpret_cast<char*>(indices.data()), indicesLength);
+            uint32_t indicesLength;
+            file.read(reinterpret_cast<char*>(&indicesLength), sizeof(indicesLength));
+            std::vector<uint32_t> indices(indicesLength / sizeof(uint32_t));
+            file.read(reinterpret_cast<char*>(indices.data()), indicesLength);
 
-        Mesh mesh;
+            std::unique_ptr<VertexBuffer> vbo =
+                std::make_unique<VertexBuffer>(vertices.data(), vertices.size() * sizeof(float), layout);
+            std::unique_ptr<IndexBuffer> ibo =
+                std::make_unique<IndexBuffer>(indices.data(), indices.size() * sizeof(uint32_t));
+            const std::shared_ptr<VertexArray> vao =
+                std::make_shared<VertexArray>(std::move(vbo), std::move(ibo));
 
-        std::unique_ptr<VertexBuffer> vbo =
-            std::make_unique<VertexBuffer>(vertices.data(), vertices.size() * sizeof(float), layout);
-        std::unique_ptr<IndexBuffer> ibo =
-            std::make_unique<IndexBuffer>(indices.data(), indices.size() * sizeof(uint32_t));
-        const std::shared_ptr<VertexArray> vao =
-            std::make_shared<VertexArray>(std::move(vbo), std::move(ibo));
+            trackModel.crosstie.AddSubMesh(vao, material);
+        }
 
-        mesh.AddSubMesh(vao, material);
+        // Parse rail
+        {
+            uint32_t vertexAttribsLength;
+            file.read(reinterpret_cast<char*>(&vertexAttribsLength), sizeof(vertexAttribsLength));
+            trackModel.railProfile.reserve(vertexAttribsLength / sizeof(float));
+            file.read(reinterpret_cast<char*>(trackModel.railProfile.data()), vertexAttribsLength);
 
-        return mesh;
+            uint32_t indicesLength;
+            file.read(reinterpret_cast<char*>(&indicesLength), sizeof(indicesLength));
+            trackModel.railIndices.reserve(indicesLength / sizeof(uint32_t));
+            file.read(reinterpret_cast<char*>(trackModel.railIndices.data()), indicesLength);
+        }
+
+        return trackModel;
     }
 
 }

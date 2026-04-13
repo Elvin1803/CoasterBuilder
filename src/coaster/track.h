@@ -3,7 +3,7 @@
 
 #include "section.h"
 
-#include "graphics/3d/mesh.h"
+#include "graphics/3d/model.h"
 
 class Track {
 public:
@@ -29,7 +29,7 @@ private:
     std::list<std::unique_ptr<Section>> m_sections; // 1 section = 1 mesh
     std::unique_ptr<Section>* m_currentSection = nullptr; // Section that is being edited
 
-    graphics::Mesh m_trackModel;
+    graphics::TrackModel m_trackModel;
 };
 
 

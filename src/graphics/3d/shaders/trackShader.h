@@ -11,7 +11,7 @@ namespace graphics {
         ;
 
     inline const char* trackFrag =
-#include "simple.frag"
+#include "track.frag"
         ;
 
     class TrackShader : public ShaderProgram {
@@ -30,13 +30,15 @@ namespace graphics {
 
             m_hasTextureKdLoc = glGetUniformLocation(m_shaderProgramID, "mat.hasTextureKd");
             m_textureKdLoc = glGetUniformLocation(m_shaderProgramID, "u_textureKd");
+
+            m_currentLoc = glGetUniformLocation(m_shaderProgramID, "u_current");
         }
 
         void setMVP(const glm::mat4 mvp) const {
             glUniformMatrix4fv(m_mvpLoc, 1, GL_FALSE, glm::value_ptr(mvp));
         }
 
-        void setMaterial(const Material* mat) const {
+        void setMaterial(const Material* mat, bool isCurrent) const {
             glUniform3f(m_matKaLoc, mat->ambiantColor.x, mat->ambiantColor.y, mat->ambiantColor.z);
             glUniform3f(m_matKdLoc, mat->diffuseColor.x, mat->diffuseColor.y, mat->diffuseColor.z);
             glUniform3f(m_matKsLoc, mat->specularColor.x, mat->specularColor.y, mat->specularColor.z);
@@ -55,6 +57,8 @@ namespace graphics {
             {
                 glUniform1i(m_hasTextureKdLoc, 0);
             }
+
+            glUniform1i(m_currentLoc, isCurrent);
         }
 
     private:
@@ -70,6 +74,7 @@ namespace graphics {
 
         uint32_t m_hasTextureKdLoc;
         uint32_t m_textureKdLoc;
+        uint32_t m_currentLoc;
     };
 
 }

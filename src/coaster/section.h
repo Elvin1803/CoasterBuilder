@@ -3,8 +3,7 @@
 
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/fwd.hpp"
-#include "graphics/3d/mesh.h"
-#include <vector>
+#include "graphics/3d/model.h"
 
 enum class SectionType { Basic, Station, Lift, Brake };
 
@@ -43,20 +42,14 @@ struct TrackNode {
     float heartline = 0.f;
 };
 
-struct TrackModel {
-    graphics::Mesh rail;
-    graphics::Mesh crosstie;
-    std::vector<glm::mat4> crosstiesTransforms;
-};
-
 class Section
 {
 public:
     Section() = default;
     ~Section() = default;
 
-    void SetTrackModel(const graphics::Mesh& mesh);
-    void Render(const glm::mat4& mvp);
+    void SetTrackModel(const graphics::TrackModel& trackModel);
+    void Render(const glm::mat4& mvp, bool isCurrent);
 
     virtual void CalculateNodes(ForceData data);
     virtual void CalculateNodes(DirectionData data);
@@ -70,7 +63,8 @@ private:
 
 private:
     std::vector<TrackNode> m_nodes;
-    TrackModel m_model;
+    graphics::TrackModel m_model;
+    std::vector<glm::mat4> m_modelTransforms;
 };
 
 

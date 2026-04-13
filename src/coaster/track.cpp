@@ -28,7 +28,7 @@ void Track::SetTrackModel(const std::string& filename) {
 
 void Track::Render(const glm::mat4& mvp) {
     for (auto& section : m_sections) {
-        section->Render(mvp);
+        section->Render(mvp, m_currentSection->get() == section.get());
     }
 }
 
