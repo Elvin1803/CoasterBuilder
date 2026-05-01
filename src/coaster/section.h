@@ -3,6 +3,7 @@
 
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/fwd.hpp"
+#include "graphics/3d/mesh.h"
 #include "graphics/3d/model.h"
 
 enum class SectionType { Basic, Station, Lift, Brake };
@@ -64,7 +65,11 @@ private:
 private:
     std::vector<TrackNode> m_nodes;
     graphics::TrackModel m_model;
+    graphics::Mesh m_railsModel;
+    float m_crosstiesStepDist = 1.5f;
     std::vector<glm::mat4> m_modelTransforms;
+
+    static const std::shared_ptr<graphics::BufferLayout> railsBufferLayout;
 };
 
 

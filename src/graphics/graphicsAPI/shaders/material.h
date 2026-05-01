@@ -9,7 +9,7 @@ namespace graphics
     struct Material {
     public:
         glm::vec3 ambiantColor  = glm::vec3(0); // Ka
-        glm::vec3 diffuseColor  = glm::vec3(0); // Kd
+        glm::vec3 diffuseColor  = glm::vec3(0.5f,0.5f,0.5f); // Kd
         glm::vec3 specularColor = glm::vec3(0); // Ks
         float specularExponent  = 0;            // Ns
         glm::vec3 emissiveColor = glm::vec3(0); // Ke

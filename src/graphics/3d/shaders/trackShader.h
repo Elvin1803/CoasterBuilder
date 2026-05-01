@@ -19,6 +19,7 @@ namespace graphics {
         TrackShader()
             : ShaderProgram(trackVert, trackFrag) {
             m_mvpLoc = glGetUniformLocation(m_shaderProgramID, "mvp");
+            m_useInstancingLoc = glGetUniformLocation(m_shaderProgramID, "uUseInstancing");
 
             m_matKaLoc = glGetUniformLocation(m_shaderProgramID, "mat.ambiantColor");
             m_matKdLoc = glGetUniformLocation(m_shaderProgramID, "mat.diffuseColor");
@@ -36,6 +37,10 @@ namespace graphics {
 
         void setMVP(const glm::mat4 mvp) const {
             glUniformMatrix4fv(m_mvpLoc, 1, GL_FALSE, glm::value_ptr(mvp));
+        }
+
+        void setInstancing(bool isInstanced) const {
+            glUniform1i(m_useInstancingLoc, isInstanced);
         }
 
         void setMaterial(const Material* mat, bool isCurrent) const {
@@ -63,6 +68,7 @@ namespace graphics {
 
     private:
         uint32_t m_mvpLoc;
+        uint32_t m_useInstancingLoc;
 
         uint32_t m_matKaLoc;
         uint32_t m_matKdLoc;

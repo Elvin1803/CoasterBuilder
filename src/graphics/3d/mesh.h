@@ -18,6 +18,8 @@ namespace graphics {
         void AddSubMesh(std::shared_ptr<VertexArray> vao, std::shared_ptr<Material> material);
         std::vector<SubMesh> GetSubMesh() { return m_submeshes; };
 
+        void Reset() { m_submeshes.clear(); };
+
     private:
         std::vector<SubMesh> m_submeshes;
     };

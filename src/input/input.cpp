@@ -8,7 +8,6 @@ std::map<InputAction, int> Input::m_keymap;
 int Input::m_keys[512];
 
 void Input::SetKeybind(InputAction action, int key) {
-    LOG_TRACE("set keybind {}", key);
     m_keymap[action] = key;
 }
 

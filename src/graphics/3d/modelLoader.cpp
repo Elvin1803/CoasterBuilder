@@ -241,14 +241,21 @@ namespace graphics::modelLoader {
         {
             uint32_t vertexAttribsLength;
             file.read(reinterpret_cast<char*>(&vertexAttribsLength), sizeof(vertexAttribsLength));
-            trackModel.railProfile.reserve(vertexAttribsLength / sizeof(float));
+            trackModel.railProfile.resize(vertexAttribsLength / sizeof(float));
             file.read(reinterpret_cast<char*>(trackModel.railProfile.data()), vertexAttribsLength);
 
             uint32_t indicesLength;
             file.read(reinterpret_cast<char*>(&indicesLength), sizeof(indicesLength));
-            trackModel.railIndices.reserve(indicesLength / sizeof(uint32_t));
+            trackModel.railIndices.resize(indicesLength / sizeof(uint32_t));
             file.read(reinterpret_cast<char*>(trackModel.railIndices.data()), indicesLength);
+
+            for (size_t i = 0; i < trackModel.railIndices.size(); i += 2) {
+                auto p1 = &(trackModel.railProfile[trackModel.railIndices[i] * 3]);
+                auto p2 = &(trackModel.railProfile[trackModel.railIndices[i + 1] * 3]);
+                LOG_TRACE("{} {} {} <-> {} {} {}", *p1, *(p1 + 1), *(p1 + 2), *p2, *(p2 + 1), *(p2 + 2));
+            }
         }
+
 
         return trackModel;
     }

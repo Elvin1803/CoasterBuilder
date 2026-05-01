@@ -1,6 +1,7 @@
 #include <pch.h>
 #include "renderer.h"
 
+#include "glad/glad.h"
 #include "graphics/3d/shaders/simpleShader.h"
 
 Renderer::Renderer(Window *window)
