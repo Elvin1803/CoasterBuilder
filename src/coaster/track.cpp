@@ -55,12 +55,14 @@ void Track::EraseSection() {
 
 void Track::SetCurrentSection(std::unique_ptr<Section>* section) {
     m_currentSection = section;
-    CurveData data{10, 0, 0, 0};
-    EditSectionData(data);
-    LOG_TRACE("Edited section data");
-    m_currentSection->get()->SetTrackModel(m_trackModel);
-    LOG_TRACE("Set track model");
-    // TODO: Change material for rendering
+    if (section) {
+        CurveData data{10, 0, 0, 0};
+        EditSectionData(data);
+        LOG_TRACE("Edited section data");
+        m_currentSection->get()->SetTrackModel(m_trackModel);
+        LOG_TRACE("Set track model");
+        // TODO: Change material for rendering
+    }
 }
 
 void Track::EditSectionType(SectionType type) {

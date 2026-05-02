@@ -41,32 +41,27 @@ namespace app {
 
         float lag = 0;
         while (!m_window.ShouldClose()) {
-            m_uiManager.Render();
+            m_window.PollEvents();
 
             currentTime = std::chrono::high_resolution_clock::now();
             float timestep_ms = std::chrono::duration<float, std::milli>(currentTime - lastTime).count();
             lastTime = currentTime;
             lag += timestep_ms;
 
-            //app::app_state::GetAppState().SetFPS(1000.0f / timestep_ms);
+            m_fps = 1000.0f / timestep_ms;
 
-            m_window.PollEvents();
+            while (lag >= 10) {
+              m_scene.Update(10);
+              lag -= 10;
+            }
 
-            m_scene.Update(10);
-            /*
-              while (lag >= UPDATE_MS_TICK) {
-              scene.Update(UPDATE_MS_TICK);
-              lag -= UPDATE_MS_TICK;
-              }
-            */
-
-            // Rendering
+            // Rendering scene
             m_renderer.BeginFrame();
             m_renderer.Render(m_scene);
             m_renderer.EndFrame();
 
-            ImGui::Render();
-            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+            // Rendering UI
+            m_uiManager.Render(m_scene);
 
             m_window.SwapBuffers();
         }

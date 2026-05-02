@@ -21,14 +21,21 @@ namespace UI {
         ImGui::DestroyContext();
     }
 
-    void UI_manager::Render() {
+    void UI_manager::Render(scene::Scene& scene) {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
         ImGui::Begin("app state");
-        //ImGui::Text("FPS: %.3f", app::app_state::GetAppState().GetFPS());
+        ImGui::Text("FPS: %.3f", app::Application::GetApplication().GetFPS());
         ImGui::End();
+
+        for (auto& frame : scene.GetFrames()) {
+            frame->Render();
+        }
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 
 }

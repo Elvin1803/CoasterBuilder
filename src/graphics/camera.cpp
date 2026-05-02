@@ -14,7 +14,7 @@ namespace graphics {
 
     void Camera::Update(float timestep) {
         float rotationSpeed = timestep / 1000.f;
-        float moveSpeed = timestep / 10000.f;
+        float moveSpeed = timestep / 100.f;
 
         // Handle position
         if (Input::IsActionPressed(InputAction::MOVE_FORWARD)) {

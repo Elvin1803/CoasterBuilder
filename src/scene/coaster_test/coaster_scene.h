@@ -10,11 +10,6 @@ namespace scene {
     class CoasterScene : public Scene {
     public:
         CoasterScene();
-
-        virtual void Update(float timestep) override;
-
-    private:
-        CurveData data{10, 0, 0, 0};
     };
 
 }

@@ -5,14 +5,10 @@ namespace UI {
 
     class Frame {
     public:
-        Frame();
-        ~Frame();
+        Frame() = default;
+        virtual ~Frame() = default;
 
-        Frame(const Frame&) = delete;
-        Frame& operator=(Frame&) = delete;
-
-    private:
-        GLFWwindow *m_window;
+        virtual void Render() = 0;
     };
 
 }
