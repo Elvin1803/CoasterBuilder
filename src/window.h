@@ -1,6 +1,8 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#include "settings.h"
+
 class Window {
 public:
     Window(const uint16_t width, const uint16_t height, const std::string &title);
@@ -8,6 +10,10 @@ public:
 
     Window(const Window& other) = delete;
     Window& operator=(const Window& other) = delete;
+
+    void Resize(uint32_t width, uint32_t height);
+    void SetDisplayMode(DisplayMode mode);
+    void SetVSync(bool vsync);
 
     void PollEvents() const;
     bool ShouldClose() const;
@@ -20,9 +26,10 @@ public:
 
 private:
     uint16_t m_width, m_height;
+    GLFWwindow *m_window;
 
 private:
-    GLFWwindow *m_window;
+    GLFWmonitor* GetCurrentMonitor();
 };
 
 #endif /* WINDOW_H */

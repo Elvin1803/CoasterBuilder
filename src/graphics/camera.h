@@ -17,6 +17,7 @@ namespace graphics {
 
         void Update(float timestep);
 
+        void SetViewportRect(const ViewportRect& v) { m_viewport = v; };
         const glm::mat4 GetViewProjection() const { return m_projectionMatrix * m_viewMatrix; };
 
         glm::vec3 GetPosition() const { return m_position; };

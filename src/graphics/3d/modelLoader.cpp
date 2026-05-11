@@ -248,12 +248,6 @@ namespace graphics::modelLoader {
             file.read(reinterpret_cast<char*>(&indicesLength), sizeof(indicesLength));
             trackModel.railIndices.resize(indicesLength / sizeof(uint32_t));
             file.read(reinterpret_cast<char*>(trackModel.railIndices.data()), indicesLength);
-
-            for (size_t i = 0; i < trackModel.railIndices.size(); i += 2) {
-                auto p1 = &(trackModel.railProfile[trackModel.railIndices[i] * 3]);
-                auto p2 = &(trackModel.railProfile[trackModel.railIndices[i + 1] * 3]);
-                LOG_TRACE("{} {} {} <-> {} {} {}", *p1, *(p1 + 1), *(p1 + 2), *p2, *(p2 + 1), *(p2 + 2));
-            }
         }
 
 

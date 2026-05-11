@@ -1,6 +1,7 @@
 #ifndef _APP_H_
 #define _APP_H_
 
+#include "settings.h"
 #ifdef DEBUG
 #include "scene/graphics_test/gyroscope_scene/gyroscope_scene.h"
 #include "scene/graphics_test/texture_scene/texture_scene.h"
@@ -24,8 +25,11 @@ namespace app {
 
         void Run();
 
+        void ApplyVideoSettings();
+
         const Window& GetWindow() { return m_window; };
         float GetFPS() {return m_fps; };
+        Settings& GetSettings() {return m_settings; };
 
     private:
         static Application* m_instance;
@@ -38,7 +42,8 @@ namespace app {
         Renderer m_renderer{&m_window};
         UI::UI_manager m_uiManager{m_window.GetWindow()};
 
-        float m_fps = 0;
+        float m_fps;
+        Settings m_settings;
 
 #ifdef DEBUG
         //scene::GyroscopeScene m_scene;

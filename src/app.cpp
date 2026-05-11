@@ -25,6 +25,10 @@ namespace app {
         Input::SetKeybind(InputAction::MOVE_UP,       GLFW_KEY_SPACE);
         Input::SetKeybind(InputAction::MOVE_DOWN,     GLFW_KEY_X);
         Input::SetKeybind(InputAction::MOVE_SPRINT,   GLFW_KEY_LEFT_SHIFT);
+
+        m_settings.resolution = {1280, 720};
+        m_settings.displayMode = DisplayMode::BORDERLESS;
+        ApplyVideoSettings();
     }
 
     Application& Application::GetApplication() {
@@ -36,23 +40,22 @@ namespace app {
     }
 
     void Application::Run() {
-        auto currentTime = std::chrono::high_resolution_clock::now();
-        auto lastTime = std::chrono::high_resolution_clock::now();
+        auto frameStart = std::chrono::steady_clock::now();
+        auto lastTime = std::chrono::steady_clock::now();
 
-        float lag = 0;
+        auto lag = 0.f;
         while (!m_window.ShouldClose()) {
             m_window.PollEvents();
 
-            currentTime = std::chrono::high_resolution_clock::now();
-            float timestep_ms = std::chrono::duration<float, std::milli>(currentTime - lastTime).count();
-            lastTime = currentTime;
+            frameStart = std::chrono::steady_clock::now();
+            float timestep_ms = std::chrono::duration<float, std::milli>(frameStart - lastTime).count();
+            lastTime = frameStart;
             lag += timestep_ms;
 
-            m_fps = 1000.0f / timestep_ms;
-
+            // Fixed timestep update
             while (lag >= 10) {
-              m_scene.Update(10);
-              lag -= 10;
+                m_scene.Update(10);
+                lag -= 10;
             }
 
             // Rendering scene
@@ -64,6 +67,39 @@ namespace app {
             m_uiManager.Render(m_scene);
 
             m_window.SwapBuffers();
+
+            // cap fps if necessary
+            if (m_settings.maxFPS.has_value()) {
+                auto timePerFrame = 1000.f / m_settings.maxFPS.value();
+                auto frameEnd = std::chrono::steady_clock::now();
+                auto elapsedTime = std::chrono::duration<float, std::milli>(frameEnd - frameStart).count();
+                if (elapsedTime < timePerFrame) {
+                    auto sleepTime = timePerFrame - elapsedTime;
+
+                    if (sleepTime > 16.f) { // because the sleep method on windows can have up to ~15ms delay minimum
+                        std::this_thread::sleep_for(std::chrono::duration<float, std::milli>(sleepTime - 16.f));
+                    }
+
+                    while (std::chrono::duration<float, std::milli>(std::chrono::steady_clock::now() - frameStart).count() < timePerFrame) {
+                        // this is more precise than the sleep function
+                    }
+                }
+            }
+
+            auto frameEnd = std::chrono::steady_clock::now();
+            m_fps = 1000.0f / std::chrono::duration<float, std::milli>(frameEnd - frameStart).count();
         }
+    }
+
+    void Application::ApplyVideoSettings() {
+        auto width = m_settings.resolution.width;
+        auto height = m_settings.resolution.height;
+
+        m_window.Resize(width, height);
+        m_scene.GetCamera().SetViewportRect({0, 0, width, height});
+
+        m_window.SetDisplayMode(m_settings.displayMode);
+
+        m_window.SetVSync(m_settings.vsync);
     }
 }
