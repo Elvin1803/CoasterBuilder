@@ -64,29 +64,32 @@ void Section::CalculateNodes(DirectionData data){
 }
 
 void Section::CalculateNodes(CurveData data) {
-    // Reset nodes
-    m_nodes.clear();
-
     // Nodes are max 1 meter apart
     auto numSegments = static_cast<int>(std::ceil(data.length));
     auto stepDist    = (data.length / numSegments);
 
-    glm::vec3 worldUp        = glm::vec3(0.f, 1.f, 0.f);
+    constexpr glm::vec3 worldUp        = glm::vec3(0.f, 1.f, 0.f);
 
     glm::vec3 currentPos       = glm::vec3(-stepDist, 0.f, 0.f);
     glm::vec3 currentDirection = glm::vec3(1.f,       0.f, 0.f);
     glm::vec3 currentUp        = glm::vec3(0.f,       1.f, 0.f);
-    if (prevSection) {
-        const auto& temp = prevSection->get()->m_nodes[prevSection->get()->m_nodes.size() - 2];
-        m_nodes.emplace_back(temp.position, temp.direction, temp.up);
+    if (!m_nodes.empty()) {
+        currentPos       = m_nodes[1].position;
+        currentDirection = m_nodes[1].direction;
+        currentUp        = m_nodes[1].up;
+    }
+    glm::vec3 currentRight = abs(currentDirection.y) > 0.99f
+        ? glm::normalize(glm::cross(worldUp, currentUp))
+        : glm::normalize(glm::cross(currentDirection, worldUp));
 
-        currentPos       = prevSection->get()->m_nodes.back().position;
-        currentDirection = prevSection->get()->m_nodes.back().direction;
-        currentUp        = prevSection->get()->m_nodes.back().up;
-        m_nodes.emplace_back(currentPos, currentDirection, currentUp);
+    // Reset nodes
+    m_nodes.clear();
+
+    if (prevSection) {
+        m_nodes.push_back(prevSection->get()->m_nodes[prevSection->get()->m_nodes.size() - 2]);
+        m_nodes.push_back(prevSection->get()->m_nodes[prevSection->get()->m_nodes.size() - 1]);
     } else { // This is because of b-splines
         m_nodes.emplace_back(currentPos, currentDirection, currentUp);
-
         currentPos += currentDirection * stepDist;
         m_nodes.emplace_back(currentPos, currentDirection, currentUp);
     }
@@ -96,22 +99,22 @@ void Section::CalculateNodes(CurveData data) {
     auto deltaRoll  = glm::radians(data.roll  / numSegments);
 
     for (int i = 0; i < numSegments; i++) {
-        glm::vec3 currentRight;
-        if (currentDirection == glm::vec3(0.f, 1.f, 0.f)) {
-            currentRight = glm::normalize(glm::cross(currentDirection, worldUp));
-        } else {
-            currentRight = glm::normalize(glm::cross(currentDirection, currentUp));
-        }
+        // Apply Yaw first
+        auto yawRot       = glm::angleAxis(deltaYaw, worldUp);
+        currentRight      = glm::normalize(yawRot * currentRight);
+        currentDirection  = glm::normalize(yawRot * currentDirection);
+        currentUp         = glm::normalize(yawRot * currentUp);
 
-        auto rotation = glm::angleAxis(deltaYaw, worldUp) * glm::angleAxis(deltaPitch, currentRight);
+        // Then pitch (only impact up and direction vector)
+        auto pitchRot     = glm::angleAxis(deltaPitch, currentRight);
+        currentDirection  = glm::normalize(pitchRot * currentDirection);
+        currentUp         = glm::normalize(pitchRot * currentUp);
 
-        // Update local vectors
-        currentDirection  = glm::normalize(rotation * currentDirection);
+        // And finally roll (only impact up vector)
         glm::quat rollRot = glm::angleAxis(deltaRoll, currentDirection);
-        currentUp         = glm::normalize(rollRot * (rotation * currentUp));
+        currentUp         = glm::normalize(rollRot * currentUp);
 
         currentPos += currentDirection * stepDist;
-
         m_nodes.emplace_back(currentPos, currentDirection, currentUp);
     }
 

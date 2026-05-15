@@ -15,7 +15,7 @@ struct Settings
     // Video
     Resolution resolution;
     DisplayMode displayMode = DisplayMode::WINDOWED;
-    bool vsync = true;
+    bool vsync = false;
     std::optional<uint32_t> maxFPS{};
 };
 

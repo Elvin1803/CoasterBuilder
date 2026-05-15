@@ -26,8 +26,9 @@ namespace app {
         Input::SetKeybind(InputAction::MOVE_DOWN,     GLFW_KEY_X);
         Input::SetKeybind(InputAction::MOVE_SPRINT,   GLFW_KEY_LEFT_SHIFT);
 
-        m_settings.resolution = {1280, 720};
+        m_settings.resolution = {1920, 1080};
         m_settings.displayMode = DisplayMode::BORDERLESS;
+        m_settings.maxFPS = 120;
         ApplyVideoSettings();
     }
 

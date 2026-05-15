@@ -30,6 +30,16 @@ namespace UI{
             m_track->EraseSection();
         }
 
+        ImGui::Text("Select section:");
+        ImGui::SameLine();
+        if (ImGui::ArrowButton("##left", ImGuiDir_Left)) {
+            m_track->SetCurrentSection(m_track->GetCurrentSection()->get()->prevSection);
+        }
+        ImGui::SameLine();
+        if (ImGui::ArrowButton("##right", ImGuiDir_Right)) {
+            m_track->SetCurrentSection(m_track->GetCurrentSection()->get()->nextSection);
+        }
+
         ImGui::End();
     }
 }

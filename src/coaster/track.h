@@ -24,6 +24,8 @@ public:
     void EditSectionData(DirectionData data) { m_currentSection->get()->CalculateNodes(data); };
     void EditSectionData(CurveData data) { m_currentSection->get()->CalculateNodes(data); };
 
+    std::unique_ptr<Section>* GetCurrentSection() { return m_currentSection; } ;
+
 private:
     float friction = 1.f;
     std::list<std::unique_ptr<Section>> m_sections; // 1 section = 1 mesh
