@@ -3,16 +3,38 @@
 
 namespace graphics {
 
-    Texture::Texture(uint32_t width, uint32_t height, const char* data)
-        : m_width(width), m_height(height) {
+    static GLenum GetGLFormat(TextureFormat format) {
+        switch (format) {
+        case TextureFormat::RGB16F:
+        {
+            return GL_RGB16F;
+        }
+        case TextureFormat::Depth24Stencil8:
+        {
+            return GL_DEPTH24_STENCIL8;
+        }
+        default:
+        {
+            return GL_RGBA8;
+        }
+        }
+    }
+
+    Texture::Texture(const TextureSpecification& specs)
+        : m_specs(specs) {
         glCreateTextures(GL_TEXTURE_2D, 1, &m_textureId);
 
-        glTextureStorage2D(m_textureId, 1, GL_RGBA8, m_width, m_height);
-        glTextureParameteri(m_textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTextureParameteri(m_textureId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        glTextureSubImage2D(m_textureId, 0, 0, 0, m_width, m_height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glTextureStorage2D(m_textureId, 1, GetGLFormat(specs.format), specs.width, specs.height);
+        GLenum glFilter = (specs.filter == TextureFilter::Linear) ? GL_LINEAR : GL_NEAREST;
+        glTextureParameteri(m_textureId, GL_TEXTURE_MAG_FILTER, glFilter);
+        glTextureParameteri(m_textureId, GL_TEXTURE_MIN_FILTER, glFilter);
     }
+
+    void Texture::SetData(uint32_t slot, const char* data) {
+        Bind(slot);
+        glTextureSubImage2D(m_textureId, 0, 0, 0, m_specs.width, m_specs.height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    }
+
 
     Texture::~Texture() {
         glDeleteTextures(1, &m_textureId);

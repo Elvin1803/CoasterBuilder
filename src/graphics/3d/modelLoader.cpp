@@ -83,7 +83,8 @@ namespace graphics::modelLoader {
                 std::vector<char> textureKd(KdWidth * KdHeight * 4);
                 file.read(reinterpret_cast<char*>(textureKd.data()), KdWidth * KdHeight * 4);
 
-                material->textureKd = std::make_unique<Texture>(KdWidth, KdHeight, textureKd.data());
+                material->textureKd = std::make_unique<Texture>(TextureSpecification{KdWidth, KdHeight});
+                material->textureKd->SetData(0, textureKd.data());
             }
 
             materials.emplace(name, material);
@@ -211,7 +212,8 @@ namespace graphics::modelLoader {
             std::vector<char> textureKd(KdWidth * KdHeight * 4);
             file.read(reinterpret_cast<char*>(textureKd.data()), KdWidth * KdHeight * 4);
 
-            material->textureKd = std::make_unique<Texture>(KdWidth, KdHeight, textureKd.data());
+            material->textureKd = std::make_unique<Texture>(TextureSpecification{KdWidth, KdHeight});
+            material->textureKd->SetData(0, textureKd.data());
         }
 
         TrackModel trackModel;
