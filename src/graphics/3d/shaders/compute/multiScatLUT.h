@@ -18,7 +18,7 @@ namespace graphics {
             : ShaderProgram(multiScatCompute) {
             m_multiScatLUT = std::make_unique<Texture>(
                 TextureSpecification{32, 32, TextureFormat::RGBA16F,
-                                     TextureFilter::Nearest, TextureWrap::ClampToEdge}
+                                     TextureFilter::Linear, TextureWrap::ClampToEdge}
                 );
 
             UseShader();

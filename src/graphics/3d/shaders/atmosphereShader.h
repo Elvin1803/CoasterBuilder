@@ -3,24 +3,55 @@
 
 #include "graphics/graphicsAPI/shaders/shaderProgram.h"
 
-// FIXME
+#include "compute/skyViewLUT.h"
+
 namespace graphics {
 
-    inline const char* screenVert =
+    inline const char* atmosphereVert =
 #include "screen.vert"
         ;
 
-    inline const char* screenFrag =
-#include "screen.frag"
+    inline const char* atmosphereFrag =
+#include "atmosphere.frag"
         ;
 
     class AtmosphereShader : public ShaderProgram {
     public:
         AtmosphereShader()
-            : ShaderProgram(screenVert, screenFrag) {
-            UseShader();
-            glUniform1i(glGetUniformLocation(m_shaderProgramID, "u_finalRender"), 0);
+            : ShaderProgram(atmosphereVert, atmosphereFrag) {
+            m_invViewProjLoc = glGetUniformLocation(m_shaderProgramID, "u_InvViewProj");
+            m_viewHeightLoc  = glGetUniformLocation(m_shaderProgramID, "u_ViewHeight");
+            m_sunDirLoc      = glGetUniformLocation(m_shaderProgramID, "u_SunDir");
         }
+
+        void Update(float timestep) {
+            m_sunAngle += timestep * 0.00003f;
+        }
+
+        void Render(float height, const glm::mat4& invViewProj) {
+            glm::vec3 sunDir = glm::normalize(glm::vec3(0.0f, glm::sin(m_sunAngle), -glm::cos(m_sunAngle)));
+            m_skyView.Update(height, sunDir);
+
+            UseShader();
+            glUniformMatrix4fv(m_invViewProjLoc, 1, GL_FALSE, glm::value_ptr(invViewProj));
+            glUniform1f(m_viewHeightLoc, height);
+            glUniform3f(m_sunDirLoc, sunDir.x, sunDir.y, sunDir.z);
+
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, m_skyView.getTransmittence().GetTransmittanceLUTId());
+
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, m_skyView.GetSkyViewLUTId());
+        }
+
+    private:
+        SkyViewLUT m_skyView;
+
+        float m_sunAngle = -0.3f;
+
+        uint32_t m_invViewProjLoc;
+        uint32_t m_viewHeightLoc;
+        uint32_t m_sunDirLoc;
     };
 
 }

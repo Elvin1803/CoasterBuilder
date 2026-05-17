@@ -41,6 +41,20 @@ namespace UI {
         uint32_t mstexId = m_MSlutDebug.GetMultiScatLUTId();
         ImTextureID imguimsTexId = (ImTextureID)(intptr_t)mstexId;
         ImGui::Image(imguimsTexId, ImVec2(320, 320), ImVec2(0, 1), ImVec2(1, 0));
+
+        ImGui::Separator();
+
+        // Sky View
+        static float height = 6.3602f;
+        ImGui::SliderFloat("Camera Height (MM)", &height, 6.3601f, 6.4590f, "%.4f MM");
+        static float sunAngle = 0.5f;
+        ImGui::SliderFloat("Sun Cycle Angle", &sunAngle, -3.14159f, 3.14159f);
+
+        glm::vec3 sunDir = glm::normalize(glm::vec3(0.0f, glm::sin(sunAngle), -glm::cos(sunAngle)));
+        m_SVlutDebug.Update(height, sunDir);
+        uint32_t svtexId = m_SVlutDebug.GetSkyViewLUTId();
+        ImTextureID imguisvTexId = (ImTextureID)(intptr_t)svtexId;
+        ImGui::Image(imguisvTexId, ImVec2(200, 200), ImVec2(0, 1), ImVec2(1, 0));
         ImGui::End();
 #endif
 

@@ -11,6 +11,12 @@ Renderer::Renderer(Window *window)
                                                TextureFormat::RGBA8, TextureFilter::Linear});
     m_fboScene->AddBuffer(TextureSpecification{window->GetWidth(), window->GetHeight(),
                                                TextureFormat::Depth24Stencil8, TextureFilter::Nearest});
+
+    m_fboPostProcess = std::make_shared<FrameBuffer>(window->GetWidth(), window->GetHeight());
+    m_fboPostProcess->AddBuffer(TextureSpecification{window->GetWidth(), window->GetHeight(),
+                                               TextureFormat::RGBA8, TextureFilter::Linear});
+    m_fboPostProcess->AddBuffer(TextureSpecification{window->GetWidth(), window->GetHeight(),
+                                               TextureFormat::Depth24Stencil8, TextureFilter::Nearest});
 }
 
 void Renderer::BeginFrame() {
@@ -40,16 +46,18 @@ void Renderer::EndFrame() {
     m_screenShader.UseShader();
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, m_fboScene->GetColorBufferId(0)); // This needs to be set to the last framebuffer used
+    // This needs to be set to the last framebuffer usedx
+    glBindTexture(GL_TEXTURE_2D, m_fboPostProcess->GetColorBufferId(0));
     m_emptyVAO.Bind();
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
 void Renderer::Resize(uint32_t width, uint32_t height) {
     m_fboScene->Resize(width, height);
+    m_fboPostProcess->Resize(width, height);
 }
 
-void Renderer::Render(scene::Scene& scene) {
+void Renderer::Render(scene::Scene& scene, float timestep) {
     // FIXME: Shaders should be in materials
     graphics::SimpleShader shader;
 
@@ -83,4 +91,20 @@ void Renderer::Render(scene::Scene& scene) {
     for (auto& track : scene.GetTracks()) {
         track.Render(viewProj);
     }
+
+    // Render atmosphere
+    glm::mat4 invViewProj = glm::inverse(viewProj);
+    float height = cam.GetPosition().y + 6.3602f;
+
+    // Draw result to post process fbo
+    m_fboPostProcess->Bind();
+    glViewport(0, 0, m_window->GetWidth(), m_window->GetHeight());
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDepthFunc(GL_LEQUAL);
+
+    m_atmosphereShader.Update(timestep);
+    m_atmosphereShader.Render(height, invViewProj);
+    m_emptyVAO.Bind();
+    glDrawArrays(GL_TRIANGLES, 0, 3);
 }

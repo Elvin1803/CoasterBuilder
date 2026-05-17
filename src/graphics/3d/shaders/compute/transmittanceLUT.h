@@ -17,7 +17,7 @@ namespace graphics {
             : ShaderProgram(transmittanceCompute) {
             m_transmittanceLUT = std::make_unique<Texture>(
                 TextureSpecification{256, 64, TextureFormat::RGBA16F,
-                                     TextureFilter::Nearest, TextureWrap::ClampToEdge}
+                                     TextureFilter::Linear, TextureWrap::ClampToEdge}
                 );
 
             UseShader();

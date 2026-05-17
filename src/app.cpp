@@ -61,7 +61,7 @@ namespace app {
 
             // Rendering scene
             m_renderer.BeginFrame();
-            m_renderer.Render(m_scene);
+            m_renderer.Render(m_scene, timestep_ms);
             m_renderer.EndFrame();
 
             // Rendering UI
