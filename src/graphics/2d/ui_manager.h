@@ -3,6 +3,8 @@
 
 #include <scene/scene.h>
 
+#include <graphics/3d/shaders/compute/multiScatLUT.h>
+
 namespace UI {
 
     class UI_manager
@@ -12,6 +14,12 @@ namespace UI {
         ~UI_manager();
 
         void Render(scene::Scene& scene);
+
+#ifdef DEBUG
+    private:
+        graphics::TransmittanceLUT m_TlutDebug;
+        graphics::MultiScatLUT m_MSlutDebug;
+#endif
     };
 
 

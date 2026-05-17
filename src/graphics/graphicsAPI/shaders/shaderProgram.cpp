@@ -41,6 +41,29 @@ namespace graphics {
         glDeleteShader(fragmentShader);
     }
 
+    ShaderProgram::ShaderProgram(const char* computeCode) {
+        uint32_t computeShader = glCreateShader(GL_COMPUTE_SHADER);
+        glShaderSource(computeShader, 1, &computeCode, nullptr);
+        glCompileShader(computeShader);
+        // check for shader compile errors
+        int success;
+        char infoLog[512];
+        glGetShaderiv(computeShader, GL_COMPILE_STATUS, &success);
+        if (!success) {
+            glGetShaderInfoLog(computeShader, 512, NULL, infoLog);
+            LOG_ERROR("Could not compile compute shader: {}", infoLog);
+        }
+
+        // Create shader program
+        m_shaderProgramID = glCreateProgram();
+        glAttachShader(m_shaderProgramID, computeShader);
+        glLinkProgram(m_shaderProgramID);
+
+        // Clean up
+        glDeleteShader(computeShader);
+    }
+
+
     ShaderProgram::~ShaderProgram() {
         glDeleteProgram(m_shaderProgramID);
     }

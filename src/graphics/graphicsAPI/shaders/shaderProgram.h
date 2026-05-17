@@ -5,6 +5,7 @@ namespace graphics {
 
     class ShaderProgram {
     public:
+        ShaderProgram(const char* computeCode);
         ShaderProgram(const char* vertexCode, const char* fragmentCode);
         ~ShaderProgram();
 

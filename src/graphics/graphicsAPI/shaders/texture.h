@@ -5,8 +5,14 @@ namespace graphics {
 
     enum class TextureFormat {
         RGBA8,
-        RGB16F,
+        RGBA16F,
         Depth24Stencil8
+    };
+
+    enum class TextureWrap {
+        Repeat,
+        ClampToEdge,
+        ClampToBorder
     };
 
     enum class TextureFilter {
@@ -19,6 +25,7 @@ namespace graphics {
         uint32_t height = 0;
         TextureFormat format = TextureFormat::RGBA8;
         TextureFilter filter = TextureFilter::Linear;
+        TextureWrap wrap     = TextureWrap::Repeat;
     };
 
     class Texture {
@@ -36,6 +43,9 @@ namespace graphics {
         void Resize(uint32_t width, uint32_t height);
 
         uint32_t GetId() const { return m_textureId; };
+
+    private:
+        void ApplySpecs();
 
     private:
         uint32_t m_textureId;

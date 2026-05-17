@@ -1,4 +1,4 @@
-R""(#version 330 core
+R""(#version 460 core
 
 in vec2 outUVCoords;
 out vec4 FragColor;

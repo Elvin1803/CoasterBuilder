@@ -1,4 +1,4 @@
-R""(#version 330 core
+R""(#version 460 core
 
 out vec2 outUVCoords;
 

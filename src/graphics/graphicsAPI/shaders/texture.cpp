@@ -1,13 +1,14 @@
 #include <pch.h>
 #include "texture.h"
+#include "glad/glad.h"
 
 namespace graphics {
 
     static GLenum GetGLFormat(TextureFormat format) {
         switch (format) {
-        case TextureFormat::RGB16F:
+        case TextureFormat::RGBA16F:
         {
-            return GL_RGB16F;
+            return GL_RGBA16F;
         }
         case TextureFormat::Depth24Stencil8:
         {
@@ -20,14 +21,28 @@ namespace graphics {
         }
     }
 
+    static GLenum GetGLWrap(TextureWrap wrap) {
+        switch (wrap) {
+        case TextureWrap::ClampToEdge:
+        {
+            return GL_CLAMP_TO_EDGE;
+        }
+        case TextureWrap::ClampToBorder:
+        {
+            return GL_CLAMP_TO_BORDER;
+        }
+        default:
+        {
+            return GL_REPEAT;
+        }
+        }
+    }
+
     Texture::Texture(const TextureSpecification& specs)
         : m_specs(specs) {
         glCreateTextures(GL_TEXTURE_2D, 1, &m_textureId);
 
-        glTextureStorage2D(m_textureId, 1, GetGLFormat(specs.format), specs.width, specs.height);
-        GLenum glFilter = (specs.filter == TextureFilter::Linear) ? GL_LINEAR : GL_NEAREST;
-        glTextureParameteri(m_textureId, GL_TEXTURE_MAG_FILTER, glFilter);
-        glTextureParameteri(m_textureId, GL_TEXTURE_MIN_FILTER, glFilter);
+        ApplySpecs();
     }
 
     void Texture::SetData(uint32_t slot, const char* data) {
@@ -53,10 +68,17 @@ namespace graphics {
         glDeleteTextures(1, &m_textureId);
         glCreateTextures(GL_TEXTURE_2D, 1, &m_textureId);
 
-        glTextureStorage2D(m_textureId, 1, GetGLFormat(m_specs.format), width, height);
+        ApplySpecs();
+    }
+
+    void Texture::ApplySpecs() {
+        glTextureStorage2D(m_textureId, 1, GetGLFormat(m_specs.format), m_specs.width, m_specs.height);
+        // Filter
         GLenum glFilter = (m_specs.filter == TextureFilter::Linear) ? GL_LINEAR : GL_NEAREST;
         glTextureParameteri(m_textureId, GL_TEXTURE_MAG_FILTER, glFilter);
         glTextureParameteri(m_textureId, GL_TEXTURE_MIN_FILTER, glFilter);
+        // Wrap
+        glTextureParameteri(m_textureId, GL_TEXTURE_WRAP_S, GetGLWrap(m_specs.wrap));
     }
 
 }
