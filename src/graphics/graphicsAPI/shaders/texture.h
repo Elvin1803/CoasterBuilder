@@ -32,6 +32,11 @@ namespace graphics {
         void SetData(uint32_t slot, const char* data);
         void Bind(uint32_t slot) const;
 
+        // Do not call resize for actual textures, it is used for frame buffers only
+        void Resize(uint32_t width, uint32_t height);
+
+        uint32_t GetId() const { return m_textureId; };
+
     private:
         uint32_t m_textureId;
 

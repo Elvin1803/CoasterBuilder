@@ -7,6 +7,7 @@ namespace graphics {
 
     class VertexArray {
     public:
+        VertexArray(); // This will create an ampty VAO
         VertexArray(std::unique_ptr<VertexBuffer> vbo, std::unique_ptr<IndexBuffer> ibo);
         ~VertexArray();
 

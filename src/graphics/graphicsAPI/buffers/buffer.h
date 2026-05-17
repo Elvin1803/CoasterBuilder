@@ -2,6 +2,7 @@
 #define BUFFER_H
 
 #include "bufferLayout.h"
+#include "graphics/graphicsAPI/shaders/texture.h"
 
 namespace graphics {
 
@@ -44,6 +45,32 @@ namespace graphics {
 
     private:
         uint32_t m_count;
+    };
+
+    class FrameBuffer : public Buffer {
+    public:
+        FrameBuffer(uint32_t width, uint32_t height);
+        ~FrameBuffer();
+
+        FrameBuffer(const FrameBuffer& other) = delete;
+        FrameBuffer& operator=(const FrameBuffer& other) = delete;
+
+        virtual void Bind() const override;
+        virtual void Unbind() const override;
+
+        void AddBuffer(const TextureSpecification& textureSpecs);
+
+        void Resize(uint32_t width, uint32_t height);
+        uint32_t GetColorBufferId(size_t index) const { return m_colorBuffers[index]->GetId(); }
+
+    private:
+        void RebindBuffers();
+
+    private:
+        uint32_t m_width;
+        uint32_t m_height;
+        std::vector<std::shared_ptr<Texture>> m_colorBuffers;
+        std::shared_ptr<Texture> m_depthBuffer = nullptr;
     };
 
 }

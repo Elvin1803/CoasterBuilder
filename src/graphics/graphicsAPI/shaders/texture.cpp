@@ -44,4 +44,19 @@ namespace graphics {
         glBindTextureUnit(slot, m_textureId);
     }
 
+    void Texture::Resize(uint32_t width, uint32_t height) {
+        if (m_specs.width == width && m_specs.height == height) return;
+
+        m_specs.width = width;
+        m_specs.height = height;
+
+        glDeleteTextures(1, &m_textureId);
+        glCreateTextures(GL_TEXTURE_2D, 1, &m_textureId);
+
+        glTextureStorage2D(m_textureId, 1, GetGLFormat(m_specs.format), width, height);
+        GLenum glFilter = (m_specs.filter == TextureFilter::Linear) ? GL_LINEAR : GL_NEAREST;
+        glTextureParameteri(m_textureId, GL_TEXTURE_MAG_FILTER, glFilter);
+        glTextureParameteri(m_textureId, GL_TEXTURE_MIN_FILTER, glFilter);
+    }
+
 }

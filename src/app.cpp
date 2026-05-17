@@ -97,6 +97,7 @@ namespace app {
         auto height = m_settings.resolution.height;
 
         m_window.Resize(width, height);
+        m_renderer.Resize(width, height);
         m_scene.GetCamera().SetViewportRect({0, 0, width, height});
 
         m_window.SetDisplayMode(m_settings.displayMode);

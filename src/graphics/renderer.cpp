@@ -5,9 +5,17 @@
 #include "graphics/3d/shaders/simpleShader.h"
 
 Renderer::Renderer(Window *window)
-    : m_window(window) {}
+    : m_window(window) {
+    m_fboScene = std::make_shared<FrameBuffer>(window->GetWidth(), window->GetHeight());
+    m_fboScene->AddBuffer(TextureSpecification{window->GetWidth(), window->GetHeight(),
+                                               TextureFormat::RGBA8, TextureFilter::Linear});
+    m_fboScene->AddBuffer(TextureSpecification{window->GetWidth(), window->GetHeight(),
+                                               TextureFormat::Depth24Stencil8, TextureFilter::Nearest});
+}
 
 void Renderer::BeginFrame() {
+    m_fboScene->Bind();
+
     glViewport(0, 0, m_window->GetWidth(), m_window->GetHeight());
     glClearColor(1, 1, 1, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -20,6 +28,25 @@ void Renderer::BeginFrame() {
 }
 
 void Renderer::EndFrame() {
+    // Draw result to the main framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    glViewport(0, 0, m_window->GetWidth(), m_window->GetHeight());
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+
+    m_screenShader.UseShader();
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, m_fboScene->GetColorBufferId(0)); // This needs to be set to the last framebuffer used
+    m_emptyVAO.Bind();
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+}
+
+void Renderer::Resize(uint32_t width, uint32_t height) {
+    m_fboScene->Resize(width, height);
 }
 
 void Renderer::Render(scene::Scene& scene) {

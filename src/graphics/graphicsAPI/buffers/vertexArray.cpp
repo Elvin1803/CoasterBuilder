@@ -5,6 +5,10 @@
 
 namespace graphics {
 
+    VertexArray::VertexArray() {
+        glCreateVertexArrays(1, &m_vaoID);
+    }
+
     static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type) {
         switch (type) {
         case ShaderDataType::Float: return GL_FLOAT;
@@ -65,7 +69,9 @@ namespace graphics {
 
     void VertexArray::Bind() const {
         glBindVertexArray(m_vaoID);
-        m_ibo->Bind();
+        if (m_ibo) {
+            m_ibo->Bind();
+        }
     }
 
 }
