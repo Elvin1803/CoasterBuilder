@@ -94,7 +94,7 @@ void Renderer::Render(scene::Scene& scene, float timestep) {
 
     // Render atmosphere
     glm::mat4 invViewProj = glm::inverse(viewProj);
-    float height = cam.GetPosition().y + 6.3602f;
+    float height = cam.GetPosition().y + 6.3602f; // surface of the earth
 
     // Draw result to post process fbo
     m_fboPostProcess->Bind();
@@ -104,7 +104,7 @@ void Renderer::Render(scene::Scene& scene, float timestep) {
     glDepthFunc(GL_LEQUAL);
 
     m_atmosphereShader.Update(timestep);
-    m_atmosphereShader.Render(height, invViewProj);
+    m_atmosphereShader.Render(m_fboScene->GetColorBufferId(0), m_fboScene->GetDepthBufferId(), height, invViewProj);
     m_emptyVAO.Bind();
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }

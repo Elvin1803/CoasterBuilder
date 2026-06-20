@@ -28,7 +28,7 @@ namespace graphics {
             m_sunAngle += timestep * 0.00003f;
         }
 
-        void Render(float height, const glm::mat4& invViewProj) {
+        void Render(uint32_t colorBufferId, uint32_t depthBufferId, float height, const glm::mat4& invViewProj) {
             glm::vec3 sunDir = glm::normalize(glm::vec3(0.0f, glm::sin(m_sunAngle), -glm::cos(m_sunAngle)));
             m_skyView.Update(height, sunDir);
 
@@ -42,6 +42,12 @@ namespace graphics {
 
             glActiveTexture(GL_TEXTURE1);
             glBindTexture(GL_TEXTURE_2D, m_skyView.GetSkyViewLUTId());
+
+            glActiveTexture(GL_TEXTURE2);
+            glBindTexture(GL_TEXTURE_2D, depthBufferId);
+
+            glActiveTexture(GL_TEXTURE3);
+            glBindTexture(GL_TEXTURE_2D, colorBufferId);
         }
 
     private:

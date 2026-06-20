@@ -9,6 +9,8 @@ out vec4 FragColor;
 
 layout(binding = 0) uniform sampler2D u_TransmittanceLUT;
 layout(binding = 1) uniform sampler2D u_SkyViewLUT;
+layout(binding = 2) uniform sampler2D u_SceneDepth;
+layout(binding = 3) uniform sampler2D u_SceneColor;
 
 uniform mat4 u_InvViewProj;
 uniform float u_ViewHeight;
@@ -110,33 +112,43 @@ vec3 sunWithBloom(vec3 rayDir, vec3 sunDir)
 
 void main()
 {
-    vec4 clipPos = vec4(outUVCoords * 2.0 - 1.0, 1.0, 1.0);
-    vec4 viewSpacePos = u_InvViewProj * clipPos;
-    vec3 rayDir = normalize(viewSpacePos.xyz / viewSpacePos.w);
+    float depth = texture(u_SceneDepth, outUVCoords).r;
+    if (depth < 1.0)
+    {
+        FragColor = vec4(texture(u_SceneColor, outUVCoords).rgb, 1.0);
+    }
+    else
+    {
+        vec4 clipPos = vec4(outUVCoords * 2.0 - 1.0, 1.0, 1.0);
+        vec4 viewSpacePos = u_InvViewProj * clipPos;
+        vec3 rayDir = normalize(viewSpacePos.xyz / viewSpacePos.w);
 
-    vec3 viewPos = vec3(0.0, u_ViewHeight, 0.0);
+        vec3 viewPos = vec3(0.0, u_ViewHeight, 0.0);
 
-    vec3 lum = getValFromSkyLUT(rayDir, u_SunDir);
-    vec3 sunLum = sunWithBloom(rayDir, u_SunDir);
-    sunLum = smoothstep(0.002, 1.0, sunLum);
-    if (length(sunLum) > 0.0) {
-        if (rayIntersectSphere(viewPos, rayDir, groundRadius) >= 0.0) {
-            sunLum *= 0.0;
-        } else {
-            // If the sun value is applied to this pixel,
-            // we need to calculate the transmittance to obscure it.
+        vec3 lum = getValFromSkyLUT(rayDir, u_SunDir);
+        vec3 sunLum = sunWithBloom(rayDir, u_SunDir);
+        sunLum = smoothstep(0.002, 1.0, sunLum);
+        if (length(sunLum) > 0.0) {
+            if (rayIntersectSphere(viewPos, rayDir, groundRadius) >= 0.0) {
+                sunLum *= 0.0;
+            } else {
+                // If the sun value is applied to this pixel,
+                // we need to calculate the transmittance to obscure it.
+                sunLum *= getValFromTLUT(viewPos, u_SunDir);
+            }
+
             sunLum *= getValFromTLUT(viewPos, u_SunDir);
         }
+        lum += sunLum;
+
+        lum *= 20.0;
+        lum = pow(lum, vec3(1.3));
+        lum /= (smoothstep(0.0, 0.2, clamp(u_SunDir.y, 0.0, 1.0)) * 2.0 + 0.15);
+
+        lum = jodieReinhardTonemap(lum);
+        lum = pow(lum, vec3(1.0 / 2.2)); // Gamma standard
+
+        FragColor = vec4(lum, 1.0);
     }
-    lum += sunLum;
-
-    lum *= 20.0;
-    lum = pow(lum, vec3(1.3));
-    lum /= (smoothstep(0.0, 0.2, clamp(u_SunDir.y, 0.0, 1.0)) * 2.0 + 0.15);
-
-    lum = jodieReinhardTonemap(lum);
-    lum = pow(lum, vec3(1.0 / 2.2)); // Gamma standard
-
-    FragColor = vec4(lum, 1.0);
 }
 )""

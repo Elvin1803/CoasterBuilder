@@ -62,6 +62,7 @@ namespace graphics {
 
         void Resize(uint32_t width, uint32_t height);
         uint32_t GetColorBufferId(size_t index) const { return m_colorBuffers[index]->GetId(); }
+        uint32_t GetDepthBufferId() const { return m_depthBuffer ? m_depthBuffer->GetId() : -1; }
 
     private:
         void RebindBuffers();
@@ -70,7 +71,7 @@ namespace graphics {
         uint32_t m_width;
         uint32_t m_height;
         std::vector<std::shared_ptr<Texture>> m_colorBuffers;
-        std::shared_ptr<Texture> m_depthBuffer = nullptr;
+        std::shared_ptr<Texture> m_depthBuffer = nullptr; // should make it an optional
     };
 
 }
