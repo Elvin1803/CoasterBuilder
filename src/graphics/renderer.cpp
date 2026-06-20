@@ -94,7 +94,7 @@ void Renderer::Render(scene::Scene& scene, float timestep) {
 
     // Render atmosphere
     glm::mat4 invViewProj = glm::inverse(viewProj);
-    float height = cam.GetPosition().y + 6.3602f; // surface of the earth
+    float height = glm::max(6.3602f, cam.GetPosition().y / 100000.f + 6.3602f); // surface of the earth
 
     // Draw result to post process fbo
     m_fboPostProcess->Bind();

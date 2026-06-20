@@ -28,6 +28,7 @@ namespace graphics {
             m_sunAngle += timestep * 0.00003f;
         }
 
+        // FIXME: There is a problem during the day -> night transition
         void Render(uint32_t colorBufferId, uint32_t depthBufferId, float height, const glm::mat4& invViewProj) {
             glm::vec3 sunDir = glm::normalize(glm::vec3(0.0f, glm::sin(m_sunAngle), -glm::cos(m_sunAngle)));
             m_skyView.Update(height, sunDir);

@@ -11,6 +11,8 @@ namespace graphics {
         uint32_t height;
     };
 
+    enum class CameraType { Orbit, Free };
+
     class Camera {
     public:
         Camera(const ViewportRect& rect);
@@ -21,14 +23,14 @@ namespace graphics {
         const glm::mat4 GetViewProjection() const { return m_projectionMatrix * m_viewMatrix; };
 
         glm::vec3 GetPosition() const { return m_position; };
-        void SetPosition(glm::vec3 newPosition) { m_position = newPosition; UpdateViewMatrix(); };
-        glm::vec3 GetPitchYawRoll() const { return m_pitchYawRoll; };
-        void SetPitchYawRoll(glm::vec3 newPitchYawRoll) { m_pitchYawRoll = newPitchYawRoll; UpdateViewMatrix(); };
 
     private:
         void UpdateProjectionMatrix();
-        void UpdateViewMatrix();
         void UpdateOrbitCameraView();
+        void UpdateFreeCameraView();
+
+        void HandleOrbitControls(float timestep);
+        void HandleFreeControls(float timestep);
 
     private:
         float m_fov = 70;
@@ -37,12 +39,17 @@ namespace graphics {
         ViewportRect m_viewport;
         glm::mat4 m_projectionMatrix = glm::mat4(1.0f);
 
+        // Free cam
         glm::vec3 m_position = glm::vec3(0);
         glm::vec3 m_pitchYawRoll = glm::vec3(0); // Free cam view
 
+        // Orbital cam
         glm::vec3 m_orbitalTarget = glm::vec3(0);
         glm::vec3 m_rhoPhiTheta = glm::vec3(10, 0, glm::radians(45.f)); // For spherical coords
+
         glm::mat4 m_viewMatrix = glm::mat4(1.0f);
+
+        CameraType m_cameraType = CameraType::Orbit;
 
     // For controls
     private:

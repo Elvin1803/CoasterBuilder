@@ -5,6 +5,7 @@
 
 enum class InputAction {
     MOVE_FORWARD, MOVE_BACKWARD, MOVE_LEFT, MOVE_RIGHT, MOVE_UP, MOVE_DOWN, MOVE_SPRINT,
+    SWITCH_CAM_TYPE,
 
     // These actions key cannot be changed
     LEFT_CLICK, RIGHT_CLICK, MIDDLE_CLICK,

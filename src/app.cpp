@@ -18,13 +18,14 @@ namespace app {
 
 
         // TODO: Custom config
-        Input::SetKeybind(InputAction::MOVE_FORWARD,  GLFW_KEY_W);
-        Input::SetKeybind(InputAction::MOVE_LEFT,     GLFW_KEY_A);
-        Input::SetKeybind(InputAction::MOVE_BACKWARD, GLFW_KEY_S);
-        Input::SetKeybind(InputAction::MOVE_RIGHT,    GLFW_KEY_D);
-        Input::SetKeybind(InputAction::MOVE_UP,       GLFW_KEY_SPACE);
-        Input::SetKeybind(InputAction::MOVE_DOWN,     GLFW_KEY_X);
-        Input::SetKeybind(InputAction::MOVE_SPRINT,   GLFW_KEY_LEFT_SHIFT);
+        Input::SetKeybind(InputAction::MOVE_FORWARD,    GLFW_KEY_W);
+        Input::SetKeybind(InputAction::MOVE_LEFT,       GLFW_KEY_A);
+        Input::SetKeybind(InputAction::MOVE_BACKWARD,   GLFW_KEY_S);
+        Input::SetKeybind(InputAction::MOVE_RIGHT,      GLFW_KEY_D);
+        Input::SetKeybind(InputAction::MOVE_UP,         GLFW_KEY_SPACE);
+        Input::SetKeybind(InputAction::MOVE_DOWN,       GLFW_KEY_X);
+        Input::SetKeybind(InputAction::MOVE_SPRINT,     GLFW_KEY_LEFT_SHIFT);
+        Input::SetKeybind(InputAction::SWITCH_CAM_TYPE, GLFW_KEY_T);
 
         m_settings.resolution = {1920, 1080};
         m_settings.displayMode = DisplayMode::BORDERLESS;
