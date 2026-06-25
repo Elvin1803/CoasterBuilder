@@ -12,6 +12,15 @@ namespace scene {
         CoasterScene();
     };
 
+    class PlaceHolderModel : public Entity {
+    public:
+        PlaceHolderModel(graphics::ModelInstance model)
+            : Entity(model) {};
+
+        virtual void Update(float /*timestep*/) override {};
+
+    };
+
 }
 
 #endif // COASTER_SCENE_H

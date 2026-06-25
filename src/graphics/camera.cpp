@@ -124,13 +124,11 @@ namespace graphics {
             float m_Xoffset = (Input::GetMouseX() - m_lastMouseXpos) * rotationSpeed;
             float m_Yoffset = -(Input::GetMouseY() - m_lastMouseYpos) * rotationSpeed;
 
-            //if (m_pitchYawRoll.x + m_Yoffset <= glm::pi<float>() - 0.01f
-            //    && m_pitchYawRoll.x + m_Yoffset >= -glm::pi<float>() + 0.01f) {
-            //    m_pitchYawRoll.x += m_Yoffset;
-            //}
-            m_pitchYawRoll.x += m_Yoffset;
+            if (m_pitchYawRoll.x + m_Yoffset <= 90.f - 0.01f
+                && m_pitchYawRoll.x + m_Yoffset >= -90.f + 0.01f) {
+                m_pitchYawRoll.x += m_Yoffset;
+            }
             m_pitchYawRoll.y += m_Xoffset;
-
         }
 
         UpdateFreeCameraView();
@@ -138,6 +136,7 @@ namespace graphics {
 
     void Camera::UpdateOrbitCameraView() {
         // Conversion to spherical coordinates
+        //TODO: radian to degree ou iverse jsp
         float x = m_rhoPhiTheta.x * cos(m_rhoPhiTheta.z) * sin(m_rhoPhiTheta.y);
         float y = m_rhoPhiTheta.x * sin(m_rhoPhiTheta.z);
         float z = m_rhoPhiTheta.x * cos(m_rhoPhiTheta.z) * cos(m_rhoPhiTheta.y);

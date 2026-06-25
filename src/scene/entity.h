@@ -18,17 +18,17 @@ namespace scene {
 
         graphics::ModelInstance GetModel() { return m_model; };
 
-        void SetPosition(glm::vec3& newPos) {
+        void SetPosition(const glm::vec3& newPos) {
             m_position = newPos;
             m_isTranformDirty = true;
         };
 
-        void SetRotation(glm::vec3& newRot) {
+        void SetRotation(const glm::vec3& newRot) {
             m_rotation = newRot;
             m_isTranformDirty = true;
         };
 
-        void SetScale(glm::vec3& newScale) {
+        void SetScale(const glm::vec3& newScale) {
             m_scale = newScale;
             m_isTranformDirty = true;
         };

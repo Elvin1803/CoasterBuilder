@@ -71,7 +71,7 @@ void Section::CalculateNodes(CurveData data) {
     constexpr glm::vec3 worldUp        = glm::vec3(0.f, 1.f, 0.f);
 
     glm::vec3 currentPos       = glm::vec3(-stepDist, 0.f, 0.f);
-    glm::vec3 currentDirection = glm::vec3(1.f,       0.f, 0.f);
+    glm::vec3 currentDirection = glm::vec3(0.f,       0.f, 1.f);
     glm::vec3 currentUp        = glm::vec3(0.f,       1.f, 0.f);
     if (!m_nodes.empty()) {
         currentPos       = m_nodes[1].position;

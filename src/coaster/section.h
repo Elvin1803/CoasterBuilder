@@ -37,7 +37,7 @@ struct TrackNode {
     // Editable
     glm::vec3 position = glm::vec3(0.f, 0.f, 0.f); // world space
     // To calculate direction
-    glm::vec3 direction = glm::vec3(1.f, 0.f, 0.f);
+    glm::vec3 direction = glm::vec3(0.f, 0.f, 1.f);
     glm::vec3 up = glm::vec3(0.f, 1.f, 0.f);
 
     float heartline = 0.f;
